@@ -10,24 +10,7 @@ export class GetAllUsersUseCase {
   }
   public async do(): Promise<AllUsersDTO[]> {
     try {
-      // return await this.allUsersQS.getAll()
-      return await [
-        {
-          id: '1',
-          name: 'furukawa',
-          mail: 'furukawa@gmai.com',
-        },
-        {
-          id: '2',
-          name: 'nakano',
-          mail: 'nakano@gmai.com',
-        },
-        {
-          id: '3',
-          name: 'sasaki',
-          mail: 'sasaki@gmai.com',
-        },
-      ]
+      return await this.allUsersQS.getAll()
     } catch (error) {
       // memo: エラー処理
       throw error

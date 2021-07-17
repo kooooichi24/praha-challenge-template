@@ -3,20 +3,22 @@
 迷子にならないための TODO
 
 ## 参加者の一覧取得
-- [ ] DB
-  - [ ] schema.prisma
+
+- [x] DB
+  - [x] schema.prisma
 - [ ] Controller
-  - [ ] 実装
-    - [ ] user.controller.ts
+  - [x] 実装
+    - [x] user.controller.ts
       - [x] ResponseType
       - [x] response
-      - [ ] usecase
-      - [ ] qs
-- [ ] Usecase
-  - [ ] 実装
+      - [x] usecase
+      - [x] qs
+  - [x] API tool で確認
+- [x] Usecase
+  - [x] 実装
     - [x] qs-interface
     - [x] get-all-users-usecase.ts
-    - [ ] qs
-  - [ ] UT
-    - 
-
+    - [x] qs
+  - [x] UT
+    - [x] 正常系
+    - [x] 異常系

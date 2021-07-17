@@ -1,10 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { Controller, Get } from '@nestjs/common'
 import { ApiResponse } from '@nestjs/swagger'
 import { GetAllUsersResponse } from './response/get-all-users-response'
-import { PostSomeDataRequest } from './request/post-some-data-request'
 import { GetAllUsersUseCase } from '../../app/user/get-all-users-usecase'
-import { PostSomeDataUseCase } from '../../app/sample/post-some-data-usecase'
-import { SomeDataRepository } from 'src/infra/db/repository/sample/some-data-repository'
 import { PrismaClient } from '@prisma/client'
 import { AllUsersQS } from 'src/infra/db/query-service/user/all-users-qs'
 
