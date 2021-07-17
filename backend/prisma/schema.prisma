@@ -8,8 +8,15 @@ generator client {
   provider        = "prisma-client-js"
 }
 
+// model
 model SomeData {
-  id        String    @id
+  id       String  @id
   required Boolean
   number   Int     @db.SmallInt
+}
+
+model User {
+  id   String @id @default(uuid())
+  name String
+  mail String @unique
 }
