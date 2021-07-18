@@ -1,9 +1,9 @@
 import { prisma } from '@testUtil/prisma'
-import { AllUsersQS } from '../../query-service/user/all-users-qs'
-import { AllUsersDTO } from 'src/app/user/query-service-interface/all-users-qs'
+import { UserQS } from '../../query-service/user/user-qs'
+import { UserDTO } from 'src/app/user/query-service-interface/user-qs'
 
 describe('all-users-qs.integration.ts', () => {
-  const allUsersQS = new AllUsersQS(prisma)
+  const userQS = new UserQS(prisma)
 
   beforeAll(async () => {
     await prisma.user.deleteMany({})
@@ -20,24 +20,24 @@ describe('all-users-qs.integration.ts', () => {
     it('[正常系]userを取得できる', async () => {
       // Arrange
       const usersExpected = [
-        new AllUsersDTO({
+        new UserDTO({
           id: '1',
           name: 'furukawa',
           mail: 'furukawa@gmai.com',
         }),
-        new AllUsersDTO({
+        new UserDTO({
           id: '2',
           name: 'nakano',
           mail: 'nakano@gmai.com',
         }),
-        new AllUsersDTO({
+        new UserDTO({
           id: '3',
           name: 'sasaki',
           mail: 'sasaki@gmai.com',
         }),
       ]
       await Promise.all(
-        usersExpected.map(async (user: AllUsersDTO) => {
+        usersExpected.map(async (user: UserDTO) => {
           await prisma.user.create({
             data: user,
           })
@@ -45,7 +45,7 @@ describe('all-users-qs.integration.ts', () => {
       )
 
       // Act
-      const actual = await allUsersQS.getAll()
+      const actual = await userQS.getAll()
 
       // Assert
       expect(actual).toEqual(usersExpected)

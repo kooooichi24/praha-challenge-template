@@ -1,16 +1,13 @@
 import { PrismaClient, User } from '@prisma/client'
-import {
-  AllUsersDTO,
-  IAllUsersQS,
-} from 'src/app/user/query-service-interface/all-users-qs'
+import { UserDTO, IUserQS } from 'src/app/user/query-service-interface/user-qs'
 
-export class AllUsersQS implements IAllUsersQS {
+export class UserQS implements IUserQS {
   private prismaClient: PrismaClient
   public constructor(prismaClient: PrismaClient) {
     this.prismaClient = prismaClient
   }
 
-  public async getAll(): Promise<AllUsersDTO[]> {
+  public async getAll(): Promise<UserDTO[]> {
     const allUsersDatas: User[] = await this.prismaClient.user.findMany({
       orderBy: {
         id: 'asc',
@@ -18,9 +15,13 @@ export class AllUsersQS implements IAllUsersQS {
     })
     return allUsersDatas.map(
       (userDM) =>
-        new AllUsersDTO({
+        new UserDTO({
           ...userDM,
         }),
     )
+  }
+
+  public async findById(id: string): Promise<UserDTO> {
+    return new UserDTO({ id: '1', name: 'name', mail: 'mail@gmail.com' })
   }
 }

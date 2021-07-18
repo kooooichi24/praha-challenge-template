@@ -1,24 +1,24 @@
 import { PrismaClient } from '@prisma/client'
-import { AllUsersQS } from 'src/infra/db/query-service/user/all-users-qs'
+import { UserQS } from 'src/infra/db/query-service/user/user-qs'
 import { GetAllUsersUseCase } from '../get-all-users-usecase'
 import { mocked } from 'ts-jest/utils'
 import { MockedObjectDeep } from 'ts-jest/dist/utils/testing'
-import { AllUsersDTO } from '../query-service-interface/all-users-qs'
+import { UserDTO } from '../query-service-interface/user-qs'
 
 jest.mock('@prisma/client')
-jest.mock('src/infra/db/query-service/user/all-users-qs')
+jest.mock('src/infra/db/query-service/user/user-qs')
 
 describe('do', () => {
-  let mockAllUsersQS: MockedObjectDeep<AllUsersQS>
+  let mockUserQS: MockedObjectDeep<UserQS>
 
   beforeAll(() => {
     const prisma = new PrismaClient()
-    mockAllUsersQS = mocked(new AllUsersQS(prisma), true)
+    mockUserQS = mocked(new UserQS(prisma), true)
   })
 
-  it('[正常系]: AllUsersDTO[]を取得できること', async () => {
+  it('[正常系]: UserDTO[]を取得できること', async () => {
     // Arrange
-    const mockResponseAllUsersDTO: AllUsersDTO[] = [
+    const mockResponseUserDTO: UserDTO[] = [
       {
         id: '1',
         name: 'furukawa',
@@ -35,25 +35,25 @@ describe('do', () => {
         mail: 'sasaki@gmai.com',
       },
     ]
-    mockAllUsersQS.getAll.mockResolvedValueOnce(mockResponseAllUsersDTO)
+    mockUserQS.getAll.mockResolvedValueOnce(mockResponseUserDTO)
 
     // Act
-    const usecase = new GetAllUsersUseCase(mockAllUsersQS)
+    const usecase = new GetAllUsersUseCase(mockUserQS)
     const actual = await usecase.do()
 
     // Assert
-    expect(mockAllUsersQS.getAll).toHaveBeenCalled()
-    expect(actual).toStrictEqual(mockResponseAllUsersDTO)
+    expect(mockUserQS.getAll).toHaveBeenCalled()
+    expect(actual).toStrictEqual(mockResponseUserDTO)
   })
 
   it('[異常系]: allUsersQS.getAllで例外が発生した場合、例外が発生する', async () => {
     // Arrange
     const ERROR_MESSAGE = 'error!'
-    mockAllUsersQS.getAll.mockRejectedValueOnce(ERROR_MESSAGE)
+    mockUserQS.getAll.mockRejectedValueOnce(ERROR_MESSAGE)
 
     try {
       // Act
-      const usecase = new GetAllUsersUseCase(mockAllUsersQS)
+      const usecase = new GetAllUsersUseCase(mockUserQS)
       const actual = await usecase.do()
       fail()
     } catch (e) {

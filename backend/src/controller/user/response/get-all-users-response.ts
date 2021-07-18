@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { AllUsersDTO } from 'src/app/user/query-service-interface/all-users-qs'
+import { UserDTO } from 'src/app/user/query-service-interface/user-qs'
 
 export class GetAllUsersResponse {
   @ApiProperty({ type: () => [User] })
   users: User[]
 
-  public constructor(params: { users: AllUsersDTO[] }) {
+  public constructor(params: { users: UserDTO[] }) {
     const { users } = params
     this.users = users.map(({ id, name, mail }) => {
       return new User({

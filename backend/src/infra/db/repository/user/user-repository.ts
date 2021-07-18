@@ -1,7 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { ISomeDataRepository } from 'src/app/sample/repository-interface/some-data-repository'
 import { IUserRepository } from 'src/app/user/repository-interface/user-repository'
-import { SomeData } from 'src/domain/sample/entity/some-data'
 import { User } from 'src/domain/user/entity/user'
 
 export class UserRepository implements IUserRepository {
@@ -9,6 +7,7 @@ export class UserRepository implements IUserRepository {
   public constructor(prismaClient: PrismaClient) {
     this.prismaClient = prismaClient
   }
+
   public async save(userEntity: User): Promise<User> {
     const { id, name, mail } = userEntity.getAllProperties()
     const savedUserDataModel = await this.prismaClient.user.create({
@@ -23,5 +22,9 @@ export class UserRepository implements IUserRepository {
       ...savedUserDataModel,
     })
     return savedUserEntity
+  }
+
+  public async delete(user: User): Promise<User> {
+    return user
   }
 }

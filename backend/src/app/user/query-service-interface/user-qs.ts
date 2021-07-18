@@ -1,4 +1,4 @@
-export class AllUsersDTO {
+export class UserDTO {
   public readonly id: string
   public readonly name: string
   public readonly mail: string
@@ -10,6 +10,7 @@ export class AllUsersDTO {
   }
 }
 
-export interface IAllUsersQS {
-  getAll(): Promise<AllUsersDTO[]>
+export interface IUserQS {
+  getAll(): Promise<UserDTO[]>
+  findById(id: string): Promise<UserDTO>
 }

@@ -15,7 +15,7 @@ import { GetAllUsersResponse } from './response/get-all-users-response'
 import { GetAllUsersUseCase } from '../../app/user/get-all-users-usecase'
 import { PostUserUseCase } from 'src/app/user/post-user-usecase'
 import { DeleteUserUseCase } from 'src/app/user/delete-user-usecase'
-import { AllUsersQS } from 'src/infra/db/query-service/user/all-users-qs'
+import { UserQS } from 'src/infra/db/query-service/user/user-qs'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
 
 @Controller({
@@ -28,7 +28,7 @@ export class UserController {
   @ApiResponse({ status: 200, type: GetAllUsersResponse })
   async findAll(): Promise<GetAllUsersResponse> {
     const prisma = new PrismaClient()
-    const qs = new AllUsersQS(prisma)
+    const qs = new UserQS(prisma)
     const usecase = new GetAllUsersUseCase(qs)
     const result = await usecase.do()
     const response = new GetAllUsersResponse({ users: result })

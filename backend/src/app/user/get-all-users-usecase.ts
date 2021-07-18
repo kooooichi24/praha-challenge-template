@@ -1,16 +1,13 @@
-import {
-  AllUsersDTO,
-  IAllUsersQS,
-} from './query-service-interface/all-users-qs'
+import { UserDTO, IUserQS } from './query-service-interface/user-qs'
 
 export class GetAllUsersUseCase {
-  private readonly allUsersQS: IAllUsersQS
-  public constructor(allUsersQS: IAllUsersQS) {
-    this.allUsersQS = allUsersQS
+  private readonly userQS: IUserQS
+  public constructor(userQS: IUserQS) {
+    this.userQS = userQS
   }
-  public async do(): Promise<AllUsersDTO[]> {
+  public async do(): Promise<UserDTO[]> {
     try {
-      return await this.allUsersQS.getAll()
+      return await this.userQS.getAll()
     } catch (error) {
       // memo: エラー処理
       throw error
