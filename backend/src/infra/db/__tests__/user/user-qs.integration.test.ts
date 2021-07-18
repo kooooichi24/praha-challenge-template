@@ -1,6 +1,7 @@
 import { prisma } from '@testUtil/prisma'
 import { UserQS } from '../../query-service/user/user-qs'
 import { UserDTO } from 'src/app/user/query-service-interface/user-qs'
+import { createRandomIdString } from 'src/util/random'
 
 describe('all-users-qs.integration.ts', () => {
   const userQS = new UserQS(prisma)
@@ -49,6 +50,39 @@ describe('all-users-qs.integration.ts', () => {
 
       // Assert
       expect(actual).toEqual(usersExpected)
+    })
+  })
+
+  describe('findById', () => {
+    afterEach(async () => {
+      await prisma.user.deleteMany({})
+    })
+
+    it('[正常系]idに合致したuserを取得できる', async () => {
+      // Arrange
+      const id = createRandomIdString()
+      const user = {
+        id,
+        name: 'name',
+        mail: 'mail@gmail.com',
+      }
+      const expected = new UserDTO(user)
+      await prisma.user.create({ data: user })
+
+      // Act
+      const actual = await userQS.findById(id)
+
+      // Assert
+      expect(actual).toStrictEqual(expected)
+    })
+
+    it('[正常系]idに合致したuserが存在しない場合、undefinedを取得できる', async () => {
+      // Arrange
+      // Act
+      const actual = await userQS.findById('evalId')
+
+      // Assert
+      expect(actual).toBeUndefined()
     })
   })
 })

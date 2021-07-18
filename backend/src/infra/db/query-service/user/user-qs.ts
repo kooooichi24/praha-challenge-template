@@ -22,6 +22,15 @@ export class UserQS implements IUserQS {
   }
 
   public async findById(id: string): Promise<UserDTO | undefined> {
-    return new UserDTO({ id: '1', name: 'name', mail: 'mail@gmail.com' })
+    const user = await this.prismaClient.user.findUnique({
+      where: {
+        id,
+      },
+    })
+    if (!user) {
+      return undefined
+    }
+
+    return new UserDTO({ id: user.id, name: user.name, mail: user.mail })
   }
 }

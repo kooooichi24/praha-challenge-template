@@ -66,11 +66,14 @@
     - [x] repository
     - [x] interface
     - [x] delete-user-usecase.ts
-- [ ] repository
-  - [ ] IT
-    - [ ] 正常系
-  - [ ] 実装
+- [x] repository
+  - [x] IT
+    - [x] 正常系
+  - [x] 実装
 
 # memo
 
 - エラーハンドリングが分からん。repository を呼び出す際に都度 try catch するの？
+- DB の unique 制約でエラー発生した場合は、どこでエラーハンドリングするの？
+  - repository? usecase?
+  - ドメインロジックだから domain??
