@@ -6,7 +6,7 @@
 
 - [x] DB
   - [x] schema.prisma
-- [ ] Controller
+- [x] Controller
   - [x] 実装
     - [x] user.controller.ts
       - [x] ResponseType
@@ -22,3 +22,7 @@
   - [x] UT
     - [x] 正常系
     - [x] 異常系
+- [x] query-service
+  - [x] UT
+    - [x] 正常系
+  - [x] 実装

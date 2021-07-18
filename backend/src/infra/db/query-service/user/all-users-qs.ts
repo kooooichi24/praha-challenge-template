@@ -11,29 +11,16 @@ export class AllUsersQS implements IAllUsersQS {
   }
 
   public async getAll(): Promise<AllUsersDTO[]> {
-    const allUsersDatas: User[] = await this.prismaClient.user.findMany()
-    // return allUsersDatas.map(
-    //   (userDM: User) =>
-    //     new AllUsersDTO({
-    //       ...userDM,
-    //     }),
-    // )
-    return await [
-      {
-        id: '1',
-        name: 'furukawa',
-        mail: 'furukawa@gmai.com',
+    const allUsersDatas: User[] = await this.prismaClient.user.findMany({
+      orderBy: {
+        id: 'asc',
       },
-      {
-        id: '2',
-        name: 'nakano',
-        mail: 'nakano@gmai.com',
-      },
-      {
-        id: '3',
-        name: 'sasaki',
-        mail: 'sasaki@gmai.com',
-      },
-    ]
+    })
+    return allUsersDatas.map(
+      (userDM) =>
+        new AllUsersDTO({
+          ...userDM,
+        }),
+    )
   }
 }
