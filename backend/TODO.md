@@ -58,15 +58,19 @@
       - [x] usecase
       - [x] repo
   - [x] API tool で確認
-- [ ] Usecase
-  - [ ] UT
+- [x] Usecase
+  - [x] UT
     - [x] 正常系
-    - [ ] 異常系
-  - [ ] 実装
-    - [ ] repository
-    - [ ] interface
-    - [ ] delete-user-usecase.ts
+    - [x] 異常系
+  - [x] 実装
+    - [x] repository
+    - [x] interface
+    - [x] delete-user-usecase.ts
 - [ ] repository
   - [ ] IT
     - [ ] 正常系
   - [ ] 実装
+
+# memo
+
+- エラーハンドリングが分からん。repository を呼び出す際に都度 try catch するの？

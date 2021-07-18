@@ -12,12 +12,15 @@ export class DeleteUserUseCase {
   public async do(params: { id: string }): Promise<void> {
     const { id } = params
     const userDTO = await this.userQS.findById(id)
+    if (!userDTO) {
+      throw Error('idに該当するユーザーが存在しません')
+    }
+
     const userEntity = new User({
       id: userDTO.id,
       mail: userDTO.mail,
       name: userDTO.name,
     })
-
     await this.userRepo.delete(userEntity)
   }
 }

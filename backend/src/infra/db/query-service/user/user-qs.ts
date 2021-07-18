@@ -21,7 +21,7 @@ export class UserQS implements IUserQS {
     )
   }
 
-  public async findById(id: string): Promise<UserDTO> {
+  public async findById(id: string): Promise<UserDTO | undefined> {
     return new UserDTO({ id: '1', name: 'name', mail: 'mail@gmail.com' })
   }
 }

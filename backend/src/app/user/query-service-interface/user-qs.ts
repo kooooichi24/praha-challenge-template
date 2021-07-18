@@ -12,5 +12,5 @@ export class UserDTO {
 
 export interface IUserQS {
   getAll(): Promise<UserDTO[]>
-  findById(id: string): Promise<UserDTO>
+  findById(id: string): Promise<UserDTO | undefined>
 }

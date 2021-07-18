@@ -46,19 +46,21 @@ describe('do', () => {
     expect(mockUserRepo.delete).toHaveBeenLastCalledWith(deleteUser)
     expect(target).toBe(undefined)
   })
-  // it('[異常系]: userRepo.saveで例外が発生した場合、例外が発生する', async () => {
-  //   // Arrange
-  //   const ERROR_MESSAGE = 'error!'
-  //   mockUserRepo.save.mockRejectedValueOnce(ERROR_MESSAGE)
 
-  //   try {
-  //     // Act
-  //     const usecase = new PostUserUseCase(mockUserRepo)
-  //     await usecase.do({ name: 'name', mail: 'mail@gmail.com' })
-  //     fail()
-  //   } catch (e) {
-  //     // Assert
-  //     expect(e).toBe(ERROR_MESSAGE)
-  //   }
-  // })
+  it('[異常系]: idに該当するユーザが存在しない場合、例外が発生する', async () => {
+    // Arrange
+    const deleteUserId = createRandomIdString()
+    mockUserQS.findById.mockResolvedValueOnce(undefined)
+
+    try {
+      // Act
+      const usecase = new DeleteUserUseCase(mockUserRepo, mockUserQS)
+      const target = await usecase.do({ id: deleteUserId })
+      fail()
+    } catch (e) {
+      // Assert
+      expect(mockUserQS.findById).toHaveBeenLastCalledWith(deleteUserId)
+      expect(e.message).toBe('idに該当するユーザーが存在しません')
+    }
+  })
 })
