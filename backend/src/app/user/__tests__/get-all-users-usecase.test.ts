@@ -51,10 +51,9 @@ describe('do', () => {
     const ERROR_MESSAGE = 'error!'
     mockAllUsersQS.getAll.mockRejectedValueOnce(ERROR_MESSAGE)
 
-    const usecase = new GetAllUsersUseCase(mockAllUsersQS)
-
-    // Act
     try {
+      // Act
+      const usecase = new GetAllUsersUseCase(mockAllUsersQS)
       const actual = await usecase.do()
       fail()
     } catch (e) {

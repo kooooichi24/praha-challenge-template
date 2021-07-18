@@ -23,6 +23,28 @@
     - [x] 正常系
     - [x] 異常系
 - [x] query-service
-  - [x] UT
+  - [x] IT
     - [x] 正常系
   - [x] 実装
+
+## 参加者の新規追加
+
+- [ ] Controller
+  - [x] 実装
+    - [x] user.controller.ts
+      - [x] request
+      - [x] usecase
+      - [x] repo
+  - [ ] API tool で確認
+- [x] Usecase
+  - [x] UT
+    - [x] 正常系
+    - [x] 異常系
+  - [x] 実装
+    - [x] repository
+    - [x] interface
+    - [x] post-user-usecase.ts
+- [ ] repository
+  - [ ] IT
+    - [ ] 正常系
+  - [ ] 実装
