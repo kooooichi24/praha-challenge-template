@@ -29,13 +29,13 @@
 
 ## 参加者の新規追加
 
-- [ ] Controller
+- [x] Controller
   - [x] 実装
     - [x] user.controller.ts
       - [x] request
       - [x] usecase
       - [x] repo
-  - [ ] API tool で確認
+  - [x] API tool で確認
 - [x] Usecase
   - [x] UT
     - [x] 正常系
@@ -44,6 +44,28 @@
     - [x] repository
     - [x] interface
     - [x] post-user-usecase.ts
+- [x] repository
+  - [x] IT
+    - [x] 正常系
+  - [x] 実装
+
+## 参加者の削除
+
+- [x] Controller
+  - [x] 実装
+    - [x] user.controller.ts
+      - [x] request
+      - [x] usecase
+      - [x] repo
+  - [x] API tool で確認
+- [ ] Usecase
+  - [ ] UT
+    - [x] 正常系
+    - [ ] 異常系
+  - [ ] 実装
+    - [ ] repository
+    - [ ] interface
+    - [ ] delete-user-usecase.ts
 - [ ] repository
   - [ ] IT
     - [ ] 正常系
