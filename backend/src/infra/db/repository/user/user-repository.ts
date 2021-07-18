@@ -24,7 +24,15 @@ export class UserRepository implements IUserRepository {
     return savedUserEntity
   }
 
-  public async delete(user: User): Promise<User> {
-    return user
+  public async delete(userEntity: User): Promise<User> {
+    const { id } = userEntity.getAllProperties()
+    const deletedUserDataModel = await this.prismaClient.user.delete({
+      where: { id },
+    })
+
+    const deleteUserEntity = new User({
+      ...deletedUserDataModel,
+    })
+    return deleteUserEntity
   }
 }

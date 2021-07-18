@@ -70,6 +70,11 @@
   - [x] IT
     - [x] 正常系
   - [x] 実装
+- [x] query-service
+  - [x] IT
+    - [x] 正常系
+  - [x] 実装
+
 
 # memo
 
