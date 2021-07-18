@@ -10,19 +10,17 @@ export class UserRepository implements IUserRepository {
     this.prismaClient = prismaClient
   }
   public async save(userEntity: User): Promise<User> {
-    // const { id, required, number } = someDataEntity.getAllProperties()
-    // const savedSomeDataDatamodel = await this.prismaClient.someData.create({
-    //   data: {
-    //     id,
-    //     required,
-    //     number,
-    //   },
-    // })
+    const { id, name, mail } = userEntity.getAllProperties()
+    const savedUserDataModel = await this.prismaClient.user.create({
+      data: {
+        id,
+        name,
+        mail,
+      },
+    })
+
     const savedUserEntity = new User({
-      // ...savedSomeDataDatamodel,
-      id: '1',
-      mail: 'mail',
-      name: 'name',
+      ...savedUserDataModel,
     })
     return savedUserEntity
   }
