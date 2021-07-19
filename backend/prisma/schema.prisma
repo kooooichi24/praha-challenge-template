@@ -16,7 +16,14 @@ model SomeData {
 }
 
 model User {
-  id   String @id @default(uuid())
-  name String
-  mail String @unique
+  id     String @id @default(uuid())
+  name   String
+  mail   String @unique
+  status Status @default(ENROLLMENT)
+}
+
+enum Status {
+  ENROLLMENT
+  RECESS
+  LEFT
 }

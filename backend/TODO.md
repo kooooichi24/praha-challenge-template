@@ -75,6 +75,30 @@
     - [x] 正常系
   - [x] 実装
 
+## 参加者の更新（在籍ステータス）
+
+- [x] DB
+  - [x] schema.prisma
+- [ ] Controller
+  - [ ] 実装
+    - [ ] user.controller.ts
+      - [ ] ResponseType
+      - [ ] response
+      - [ ] usecase
+      - [ ] qs
+  - [ ] API tool で確認
+- [ ] Usecase
+  - [ ] UT
+    - [ ] 正常系
+    - [ ] 異常系
+  - [ ] 実装
+    - [ ] qs-interface
+    - [ ] get-all-users-usecase.ts
+    - [ ] qs
+- [ ] query-service
+  - [ ] IT
+    - [ ] 正常系
+  - [ ] 実装
 
 # memo
 
