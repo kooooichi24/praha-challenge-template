@@ -28,12 +28,14 @@ describe('do', () => {
       id: deleteUserId,
       mail: 'mail@gmail.com',
       name: 'name',
+      status: 'ENROLLMENT',
     })
     mockUserQS.findById.mockResolvedValueOnce(responseFindByIdUser)
     const deleteUser = new User({
       id: deleteUserId,
       mail: 'mail@gmail.com',
       name: 'name',
+      status: 'ENROLLMENT',
     })
     mockUserRepo.delete.mockResolvedValueOnce(deleteUser)
 

@@ -24,6 +24,7 @@ describe('user-repository.integration.ts', () => {
         id: createRandomIdString(),
         name: 'testName',
         mail: 'test@gmail.com',
+        status: 'ENROLLMENT',
       })
 
       // Act
@@ -44,22 +45,24 @@ describe('user-repository.integration.ts', () => {
     it('[正常系]idに合致したuserを削除できる', async () => {
       // Arrange
       const deleteId = createRandomIdString()
-      const deleteUser = {
+      const deleteUser = new User({
         id: deleteId,
         name: 'delete-san',
         mail: 'delete@gmail.com',
-      }
+        status: 'ENROLLMENT',
+      })
       const nonDeleteId = createRandomIdString()
-      const nonDeleteUser = {
+      const nonDeleteUser = new User({
         id: nonDeleteId,
         name: 'non-delete-san',
         mail: 'non-delete@gmail.com',
-      }
-      await prisma.user.create({ data: deleteUser })
-      await prisma.user.create({ data: nonDeleteUser })
+        status: 'ENROLLMENT',
+      })
+      await prisma.user.create({ data: deleteUser.getAllProperties() })
+      await prisma.user.create({ data: nonDeleteUser.getAllProperties() })
 
       // Act
-      await userRepository.delete(new User(deleteUser))
+      await userRepository.delete(deleteUser)
       const actual = await prisma.user.findMany({})
 
       // Assert

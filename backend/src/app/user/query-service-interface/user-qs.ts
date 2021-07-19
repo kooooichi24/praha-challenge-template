@@ -2,11 +2,18 @@ export class UserDTO {
   public readonly id: string
   public readonly name: string
   public readonly mail: string
-  public constructor(props: { id: string; name: string; mail: string }) {
-    const { id, name, mail } = props
+  public readonly status: 'ENROLLMENT' | 'RECESS' | 'LEFT'
+  public constructor(props: {
+    id: string
+    name: string
+    mail: string
+    status: 'ENROLLMENT' | 'RECESS' | 'LEFT'
+  }) {
+    const { id, name, mail, status } = props
     this.id = id
     this.name = name
     this.mail = mail
+    this.status = status
   }
 }
 

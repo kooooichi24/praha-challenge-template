@@ -9,12 +9,13 @@ export class UserRepository implements IUserRepository {
   }
 
   public async save(userEntity: User): Promise<User> {
-    const { id, name, mail } = userEntity.getAllProperties()
+    const { id, name, mail, status } = userEntity.getAllProperties()
     const savedUserDataModel = await this.prismaClient.user.create({
       data: {
         id,
         name,
         mail,
+        status,
       },
     })
 

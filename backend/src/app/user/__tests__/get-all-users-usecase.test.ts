@@ -23,16 +23,19 @@ describe('do', () => {
         id: '1',
         name: 'furukawa',
         mail: 'furukawa@gmai.com',
+        status: 'ENROLLMENT',
       },
       {
         id: '2',
         name: 'nakano',
         mail: 'nakano@gmai.com',
+        status: 'ENROLLMENT',
       },
       {
         id: '3',
         name: 'sasaki',
         mail: 'sasaki@gmai.com',
+        status: 'ENROLLMENT',
       },
     ]
     mockUserQS.getAll.mockResolvedValueOnce(mockResponseUserDTO)
