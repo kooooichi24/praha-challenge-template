@@ -9,12 +9,6 @@ generator client {
 }
 
 // model
-model SomeData {
-  id       String  @id
-  required Boolean
-  number   Int     @db.SmallInt
-}
-
 model User {
   id     String @id @default(uuid())
   name   String
