@@ -7,13 +7,13 @@ export class User {
     id: string
     name: string
     mail: string
-    status: 'ENROLLMENT' | 'RECESS' | 'LEFT'
+    status?: 'ENROLLMENT' | 'RECESS' | 'LEFT'
   }) {
     const { id, name, mail, status } = props
     this.id = id
     this.name = name
     this.mail = mail
-    this.status = status
+    this.status = status ? status : 'ENROLLMENT'
   }
 
   public getAllProperties() {

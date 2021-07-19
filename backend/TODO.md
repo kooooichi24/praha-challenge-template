@@ -79,14 +79,14 @@
 
 - [x] DB
   - [x] schema.prisma
-- [ ] Controller
-  - [ ] 実装
-    - [ ] user.controller.ts
-      - [ ] ResponseType
-      - [ ] response
-      - [ ] usecase
-      - [ ] qs
-  - [ ] API tool で確認
+- [x] Controller
+  - [x] 実装
+    - [x] user.controller.ts
+      - [x] ResponseType
+      - [x] response
+      - [x] usecase
+      - [x] qs
+  - [x] API tool で確認
 - [ ] Usecase
   - [ ] UT
     - [ ] 正常系

@@ -3,9 +3,9 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmpty, IsString } from 'class-validator'
 
-export class DeleteUserRouteParameters {
+export class UpdateUserRequest {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  readonly id!: string
+  readonly status!: string
 }

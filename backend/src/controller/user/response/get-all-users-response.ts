@@ -7,11 +7,12 @@ export class GetAllUsersResponse {
 
   public constructor(params: { users: UserDTO[] }) {
     const { users } = params
-    this.users = users.map(({ id, name, mail }) => {
+    this.users = users.map(({ id, name, mail, status }) => {
       return new User({
         id,
         name,
         mail,
+        status,
       })
     })
   }
@@ -27,9 +28,18 @@ class User {
   @ApiProperty()
   mail: string
 
-  public constructor(params: { id: string; name: string; mail: string }) {
+  @ApiProperty()
+  status: string
+
+  public constructor(params: {
+    id: string
+    name: string
+    mail: string
+    status: string
+  }) {
     this.id = params.id
     this.name = params.name
     this.mail = params.mail
+    this.status = params.status
   }
 }
