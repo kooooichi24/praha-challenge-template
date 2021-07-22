@@ -109,9 +109,36 @@
 
 - [x] Task: schema.prisma
 - [x] User: schema.prisma
-- [ ] User のスキーマ変更に伴う修正
+- [x] User のスキーマ変更に伴う修正
 
 ### CREATE
+
+- [ ] Domain
+  - [x] Task
+  - [ ] User
+- [ ] Controller
+  - [ ] 実装
+    - [ ] user.controller.ts
+      - [ ] request
+      - [ ] usecase
+      - [ ] repo
+  - [ ] API tool で確認
+- [ ] Usecase
+  - [ ] UT
+    - [ ] 正常系
+    - [ ] 異常系
+  - [ ] 実装
+    - [ ] repository
+    - [ ] interface
+    - [ ] delete-user-usecase.ts
+- [ ] repository
+  - [ ] IT
+    - [ ] 正常系
+  - [ ] 実装
+- [ ] query-service
+  - [ ] IT
+    - [ ] 正常系
+  - [ ] 実装
 
 ### READ
 
