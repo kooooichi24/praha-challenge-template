@@ -70,4 +70,36 @@ describe('user-repository.integration.ts', () => {
       expect(actual[0]).toEqual(nonDeleteUser)
     })
   })
+
+  describe('updateStatus', () => {
+    afterEach(async () => {
+      await prisma.user.deleteMany({})
+    })
+
+    it('[正常系]: statusを更新できる', async () => {
+      // Arrange
+      const targetId = createRandomIdString()
+      const userEntity = new User({
+        id: targetId,
+        name: 'testName',
+        mail: 'test@gmail.com',
+        status: 'ENROLLMENT',
+      })
+      await prisma.user.create({ data: userEntity.getAllProperties() })
+      const expected = new User({
+        id: targetId,
+        name: 'testName',
+        mail: 'test@gmail.com',
+        status: 'RECESS',
+      })
+
+      // Act
+      await userRepository.updateStatus(expected)
+      const actual = await prisma.user.findMany({})
+
+      // Assert
+      expect(actual).toHaveLength(1)
+      expect(actual[0]).toEqual(expected)
+    })
+  })
 })

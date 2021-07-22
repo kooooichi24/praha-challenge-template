@@ -37,7 +37,14 @@ export class UserRepository implements IUserRepository {
     return deleteUserEntity
   }
 
-  public async updateStatus(user: User): Promise<User> {
-    throw new Error('Method not implemented.')
+  public async updateStatus(userEntity: User): Promise<User> {
+    const { id, status } = userEntity.getAllProperties()
+    const updatedUserDataModel = await this.prismaClient.user.update({
+      where: { id },
+      data: { status },
+    })
+
+    const updatedUserEntity = new User({ ...updatedUserDataModel })
+    return updatedUserEntity
   }
 }

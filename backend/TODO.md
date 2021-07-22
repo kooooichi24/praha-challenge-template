@@ -96,10 +96,10 @@
     - [x] qs
     - [x] repo
     - [x] usecase
-- [ ] query-service
-  - [ ] IT
-    - [ ] 正常系
-  - [ ] 実装
+- [x] repository
+  - [x] IT
+    - [x] 正常系
+  - [x] 実装
 
 # memo
 
