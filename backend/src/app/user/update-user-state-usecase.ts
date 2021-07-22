@@ -11,20 +11,19 @@ export class UpdateUserStateUseCase {
     this.userQS = userQS
   }
 
-  public async do(params: { id: string; status: string }): Promise<User> {
-    // const { id, status } = params
+  public async do(params: {
+    id: string
+    status: 'ENROLLMENT' | 'RECESS' | 'LEFT'
+  }): Promise<User> {
+    const { id, status } = params
+    const userDTO = await this.userQS.findById(id)
+    if (!userDTO) {
+      throw Error('idに該当するユーザーが存在しません')
+    }
 
-    // const userEntity = new User({
-    //   id: createRandomIdString(),
-    //   name,
-    //   mail,
-    // })
-    // await this.userRepo.save(userEntity)
-    return new User({
-      id: '1',
-      name: 'name',
-      mail: 'mail',
-      status: 'RECESS',
-    })
+    // TODO: convertDTOtoEntityを作る
+    const userEntity = new User({ ...userDTO })
+    userEntity.changeStatus(status)
+    return await this.userRepo.updateStatus(userEntity)
   }
 }

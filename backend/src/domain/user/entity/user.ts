@@ -24,4 +24,8 @@ export class User {
       status: this.status,
     }
   }
+
+  public changeStatus(status: 'ENROLLMENT' | 'RECESS' | 'LEFT') {
+    this.status = status
+  }
 }

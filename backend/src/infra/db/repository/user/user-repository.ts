@@ -36,4 +36,8 @@ export class UserRepository implements IUserRepository {
     })
     return deleteUserEntity
   }
+
+  public async updateStatus(user: User): Promise<User> {
+    throw new Error('Method not implemented.')
+  }
 }

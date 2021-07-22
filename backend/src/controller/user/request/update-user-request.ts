@@ -7,5 +7,5 @@ export class UpdateUserRequest {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  readonly status!: string
+  readonly status!: 'ENROLLMENT' | 'RECESS' | 'LEFT'
 }
