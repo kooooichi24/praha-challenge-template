@@ -88,10 +88,10 @@
       - [x] qs
       - [ ] validation
   - [x] API tool で確認
-- [ ] Usecase
-  - [ ] UT
+- [x] Usecase
+  - [x] UT
     - [x] 正常系
-    - [ ] 異常系
+    - [x] 異常系
   - [x] 実装
     - [x] qs
     - [x] repo

@@ -1,14 +1,18 @@
 import { User } from 'src/domain/user/entity/user'
 import { createRandomIdString } from 'src/util/random'
+import { UserConverter } from './converter/user-converter'
 import { IUserQS } from './query-service-interface/user-qs'
 import { IUserRepository } from './repository-interface/user-repository'
 
 export class UpdateUserStateUseCase {
   private readonly userRepo: IUserRepository
   private readonly userQS: IUserQS
+  private readonly userConverter: UserConverter
+
   public constructor(userRepo: IUserRepository, userQS: IUserQS) {
     this.userRepo = userRepo
     this.userQS = userQS
+    this.userConverter = new UserConverter()
   }
 
   public async do(params: {
@@ -21,8 +25,7 @@ export class UpdateUserStateUseCase {
       throw Error('idに該当するユーザーが存在しません')
     }
 
-    // TODO: convertDTOtoEntityを作る
-    const userEntity = new User({ ...userDTO })
+    const userEntity = this.userConverter.convertToEntity(userDTO)
     userEntity.changeStatus(status)
     return await this.userRepo.updateStatus(userEntity)
   }
