@@ -10,7 +10,7 @@ export class UserRepository implements IUserRepository {
 
   public async save(userEntity: User): Promise<User> {
     const { id, name, mail, status } = userEntity.getAllProperties()
-    const savedUserDataModel = await this.prismaClient.user.create({
+    const savedUserDataModel = await this.prismaClient.users.create({
       data: {
         id,
         name,
@@ -27,7 +27,7 @@ export class UserRepository implements IUserRepository {
 
   public async delete(userEntity: User): Promise<User> {
     const { id } = userEntity.getAllProperties()
-    const deletedUserDataModel = await this.prismaClient.user.delete({
+    const deletedUserDataModel = await this.prismaClient.users.delete({
       where: { id },
     })
 
@@ -39,7 +39,7 @@ export class UserRepository implements IUserRepository {
 
   public async updateStatus(userEntity: User): Promise<User> {
     const { id, status } = userEntity.getAllProperties()
-    const updatedUserDataModel = await this.prismaClient.user.update({
+    const updatedUserDataModel = await this.prismaClient.users.update({
       where: { id },
       data: { status },
     })

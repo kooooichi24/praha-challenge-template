@@ -7,7 +7,7 @@ describe('all-users-qs.integration.ts', () => {
   const userQS = new UserQS(prisma)
 
   beforeAll(async () => {
-    await prisma.user.deleteMany({})
+    await prisma.users.deleteMany({})
   })
   afterAll(async () => {
     await prisma.$disconnect()
@@ -15,7 +15,7 @@ describe('all-users-qs.integration.ts', () => {
 
   describe('getAll', () => {
     afterEach(async () => {
-      await prisma.user.deleteMany({})
+      await prisma.users.deleteMany({})
     })
 
     it('[正常系]userを取得できる', async () => {
@@ -42,7 +42,7 @@ describe('all-users-qs.integration.ts', () => {
       ]
       await Promise.all(
         usersExpected.map(async (user: UserDTO) => {
-          await prisma.user.create({
+          await prisma.users.create({
             data: user,
           })
         }),
@@ -58,7 +58,7 @@ describe('all-users-qs.integration.ts', () => {
 
   describe('findById', () => {
     afterEach(async () => {
-      await prisma.user.deleteMany({})
+      await prisma.users.deleteMany({})
     })
 
     it('[正常系]idに合致したuserを取得できる', async () => {
@@ -71,7 +71,7 @@ describe('all-users-qs.integration.ts', () => {
         status: 'ENROLLMENT',
       }
       const expected = new UserDTO(user)
-      await prisma.user.create({ data: user })
+      await prisma.users.create({ data: user })
 
       // Act
       const actual = await userQS.findById(id)

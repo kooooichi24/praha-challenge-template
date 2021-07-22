@@ -1,4 +1,4 @@
-import { PrismaClient, User } from '@prisma/client'
+import { PrismaClient, Users } from '@prisma/client'
 import { UserDTO, IUserQS } from 'src/app/user/query-service-interface/user-qs'
 
 export class UserQS implements IUserQS {
@@ -8,7 +8,7 @@ export class UserQS implements IUserQS {
   }
 
   public async getAll(): Promise<UserDTO[]> {
-    const allUsersDatas: User[] = await this.prismaClient.user.findMany({
+    const allUsersDatas: Users[] = await this.prismaClient.users.findMany({
       orderBy: {
         id: 'asc',
       },
@@ -22,7 +22,7 @@ export class UserQS implements IUserQS {
   }
 
   public async findById(id: string): Promise<UserDTO | undefined> {
-    const userData = await this.prismaClient.user.findUnique({
+    const userData = await this.prismaClient.users.findUnique({
       where: {
         id,
       },

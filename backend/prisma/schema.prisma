@@ -9,15 +9,39 @@ generator client {
 }
 
 // model
-model User {
-  id     String @id @default(uuid())
-  name   String
-  mail   String @unique
-  status Status @default(ENROLLMENT)
+model Users {
+  id       String           @id @default(uuid())
+  name     String
+  mail     String           @unique
+  status   EnrollmentStatus @default(ENROLLMENT)
+  UserTask UserTaskStatus[]
 }
 
-enum Status {
+enum EnrollmentStatus {
   ENROLLMENT
   RECESS
   LEFT
+}
+
+model Tasks {
+  id       String           @id @default(uuid())
+  title    String
+  content  String
+  UserTask UserTaskStatus[]
+}
+
+model UserTaskStatus {
+  status ProgressStatus @default(TODO)
+  UserId String
+  TaskId String
+  User   Users          @relation(fields: [UserId], references: [id])
+  Task   Tasks          @relation(fields: [TaskId], references: [id])
+
+  @@id([UserId, TaskId])
+}
+
+enum ProgressStatus {
+  TODO
+  REVIEWING
+  DONE
 }

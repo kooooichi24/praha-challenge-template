@@ -7,7 +7,7 @@ describe('user-repository.integration.ts', () => {
   const userRepository = new UserRepository(prisma)
 
   beforeAll(async () => {
-    await prisma.user.deleteMany({})
+    await prisma.users.deleteMany({})
   })
   afterAll(async () => {
     await prisma.$disconnect()
@@ -15,7 +15,7 @@ describe('user-repository.integration.ts', () => {
 
   describe('save', () => {
     afterEach(async () => {
-      await prisma.user.deleteMany({})
+      await prisma.users.deleteMany({})
     })
 
     it('[正常系]userを保存できる', async () => {
@@ -29,7 +29,7 @@ describe('user-repository.integration.ts', () => {
 
       // Act
       await userRepository.save(expectedUserEntity)
-      const actual = await prisma.user.findMany({})
+      const actual = await prisma.users.findMany({})
 
       // Assert
       expect(actual).toHaveLength(1)
@@ -39,7 +39,7 @@ describe('user-repository.integration.ts', () => {
 
   describe('delete', () => {
     afterEach(async () => {
-      await prisma.user.deleteMany({})
+      await prisma.users.deleteMany({})
     })
 
     it('[正常系]idに合致したuserを削除できる', async () => {
@@ -58,12 +58,12 @@ describe('user-repository.integration.ts', () => {
         mail: 'non-delete@gmail.com',
         status: 'ENROLLMENT',
       })
-      await prisma.user.create({ data: deleteUser.getAllProperties() })
-      await prisma.user.create({ data: nonDeleteUser.getAllProperties() })
+      await prisma.users.create({ data: deleteUser.getAllProperties() })
+      await prisma.users.create({ data: nonDeleteUser.getAllProperties() })
 
       // Act
       await userRepository.delete(deleteUser)
-      const actual = await prisma.user.findMany({})
+      const actual = await prisma.users.findMany({})
 
       // Assert
       expect(actual).toHaveLength(1)
@@ -73,7 +73,7 @@ describe('user-repository.integration.ts', () => {
 
   describe('updateStatus', () => {
     afterEach(async () => {
-      await prisma.user.deleteMany({})
+      await prisma.users.deleteMany({})
     })
 
     it('[正常系]: statusを更新できる', async () => {
@@ -85,7 +85,7 @@ describe('user-repository.integration.ts', () => {
         mail: 'test@gmail.com',
         status: 'ENROLLMENT',
       })
-      await prisma.user.create({ data: userEntity.getAllProperties() })
+      await prisma.users.create({ data: userEntity.getAllProperties() })
       const expected = new User({
         id: targetId,
         name: 'testName',
@@ -95,7 +95,7 @@ describe('user-repository.integration.ts', () => {
 
       // Act
       await userRepository.updateStatus(expected)
-      const actual = await prisma.user.findMany({})
+      const actual = await prisma.users.findMany({})
 
       // Assert
       expect(actual).toHaveLength(1)
