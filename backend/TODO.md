@@ -128,13 +128,13 @@
 - [ ] Domain
   - [x] Task
   - [ ] User
-- [ ] Controller
-  - [ ] 実装
-    - [ ] user.controller.ts
-      - [ ] request
-      - [ ] usecase
-      - [ ] repo
-  - [ ] API tool で確認
+- [x] Controller
+  - [x] 実装
+    - [x] user.controller.ts
+      - [x] request
+      - [x] usecase
+      - [x] repo
+  - [x] API tool で確認
 - [ ] Usecase
   - [ ] UT
     - [ ] 正常系
