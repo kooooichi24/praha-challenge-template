@@ -13,6 +13,46 @@ describe('user-repository.integration.ts', () => {
     await prisma.$disconnect()
   })
 
+  describe('getByMail', () => {
+    afterEach(async () => {
+      await prisma.users.deleteMany({})
+    })
+
+    it('[正常系] mailに一致したユーザが存在する場合、ユーザエンティティを返却すること', async () => {
+      // Arrange
+      const expectedUserEntity = new User({
+        id: createRandomIdString(),
+        name: 'namae-san',
+        mail: 'test@gmail.com',
+        status: 'ENROLLMENT',
+      })
+      await prisma.users.create({ data: expectedUserEntity.getAllProperties() })
+
+      // Act
+      const actual = await userRepository.getByMail('test@gmail.com')
+
+      // Assert
+      expect(actual).toEqual(expectedUserEntity)
+    })
+
+    it('[正常系] mailに一致したユーザが存在しない場合、undefinedを返却すること', async () => {
+      // Arrange
+      const preData = new User({
+        id: createRandomIdString(),
+        name: 'namae-san',
+        mail: 'not-match-mail@gmail.com',
+        status: 'ENROLLMENT',
+      })
+      await prisma.users.create({ data: preData.getAllProperties() })
+
+      // Act
+      const actual = await userRepository.getByMail('test@gmail.com')
+
+      // Assert
+      expect(actual).toEqual(undefined)
+    })
+  })
+
   describe('save', () => {
     afterEach(async () => {
       await prisma.users.deleteMany({})

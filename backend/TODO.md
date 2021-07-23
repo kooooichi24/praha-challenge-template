@@ -103,6 +103,18 @@
     - [x] 正常系
   - [x] 実装
 
+### 参加者の重複チェック
+
+- [x] domain-service
+  - [x] UT
+  - [x] 実装
+- [x] Usecase
+  - [x] UT
+  - [x] 実装
+- [x] Repository
+  - [x] IT
+  - [x] 実装
+
 ## 課題
 
 ### DB

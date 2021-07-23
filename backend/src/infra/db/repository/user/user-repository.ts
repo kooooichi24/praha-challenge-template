@@ -4,8 +4,22 @@ import { User } from 'src/domain/user/entity/user'
 
 export class UserRepository implements IUserRepository {
   private prismaClient: PrismaClient
+
   public constructor(prismaClient: PrismaClient) {
     this.prismaClient = prismaClient
+  }
+
+  public async getByMail(mail: string): Promise<User | undefined> {
+    const userData = await this.prismaClient.users.findUnique({
+      where: {
+        mail,
+      },
+    })
+    if (!userData) {
+      return undefined
+    }
+
+    return new User({ ...userData })
   }
 
   public async save(userEntity: User): Promise<User> {

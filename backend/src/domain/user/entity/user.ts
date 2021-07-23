@@ -3,6 +3,7 @@ export class User {
   private name: string
   private mail: string
   private status: 'ENROLLMENT' | 'RECESS' | 'LEFT'
+
   public constructor(props: {
     id: string
     name: string
