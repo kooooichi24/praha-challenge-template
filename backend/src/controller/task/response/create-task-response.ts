@@ -10,18 +10,9 @@ export class CreateTaskResponse {
   @ApiProperty()
   content: string
 
-  @ApiProperty()
-  status: string
-
-  public constructor(params: {
-    id: string
-    title: string
-    content: string
-    status: string
-  }) {
+  public constructor(params: { id: string; title: string; content: string }) {
     this.id = params.id
     this.title = params.title
     this.content = params.content
-    this.status = params.status
   }
 }

@@ -125,9 +125,9 @@
 
 ### CREATE
 
-- [ ] Domain
+- [x] Domain
   - [x] Task
-  - [ ] User
+  - [x] UserTaskStatus
 - [x] Controller
   - [x] 実装
     - [x] user.controller.ts
