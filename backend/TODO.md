@@ -135,14 +135,11 @@
       - [x] usecase
       - [x] repo
   - [x] API tool で確認
-- [ ] Usecase
-  - [ ] UT
-    - [ ] 正常系
-    - [ ] 異常系
-  - [ ] 実装
-    - [ ] repository
-    - [ ] interface
-    - [ ] delete-user-usecase.ts
+- [x] Usecase
+  - [x] UT
+    - [x] 正常系
+    - [x] 異常系
+  - [x] 実装
 - [ ] repository
   - [ ] IT
     - [ ] 正常系
