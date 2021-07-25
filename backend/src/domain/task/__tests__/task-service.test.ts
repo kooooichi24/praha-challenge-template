@@ -1,13 +1,8 @@
 import { PrismaClient } from '@prisma/client'
-import { UserRepository } from 'src/infra/db/repository/user/user-repository'
-import { User } from 'src/domain/user/entity/user'
 import { createRandomIdString } from 'src/util/random'
-import { UserService } from 'src/domain/user/service/user-service'
 import { TaskRepository } from 'src/infra/db/repository/task/task-repository'
 import { Task } from '../entity/task'
 import { TaskService } from '../entity/service/task-service'
-
-jest.mock('uuidv4')
 
 describe('TaskService', () => {
   const prisma = new PrismaClient()
