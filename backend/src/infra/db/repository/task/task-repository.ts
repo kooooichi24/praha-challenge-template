@@ -10,11 +10,30 @@ export class TaskRepository implements ITaskRepository {
   }
 
   public async save(taskEntity: Task): Promise<Task> {
-    throw new Error('Method not implemented.')
+    const { id, title, content } = taskEntity.getAllProperties()
+    const savedTaskDataModel = await this.prismaClient.tasks.create({
+      data: {
+        id,
+        title,
+        content,
+      },
+    })
+    const savedTaskEntity = new Task({ ...savedTaskDataModel })
+    return savedTaskEntity
   }
 
   public async getByTitle(title: string): Promise<Task | undefined> {
-    throw new Error('Method not implemented.')
+    const taskData = await this.prismaClient.tasks.findUnique({
+      where: {
+        title,
+      },
+    })
+
+    if (!taskData) {
+      return undefined
+    }
+
+    return new Task({ ...taskData })
   }
 
   // public async save(userEntity: User): Promise<User> {

@@ -25,7 +25,7 @@ enum EnrollmentStatus {
 
 model Tasks {
   id       String           @id @default(uuid())
-  title    String
+  title    String           @unique
   content  String
   UserTask UserTaskStatus[]
 }
