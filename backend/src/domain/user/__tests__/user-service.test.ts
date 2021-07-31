@@ -57,4 +57,37 @@ describe('UserService', () => {
       }
     })
   })
+
+  describe('checkExist', () => {
+    it('[正常系]: ユーザが存在している場合、例外が発生しないこと', async () => {
+      // Arrange
+      const userRepoSpy = jest
+        .spyOn(UserRepository.prototype, 'exist')
+        .mockResolvedValueOnce(true)
+
+      // Act
+      const target = new UserService(new UserRepository(prisma))
+      await target.checkExist({ userId: '123' })
+
+      // Assert
+      expect(userRepoSpy).toHaveBeenLastCalledWith('123')
+    })
+
+    it('[異常系]: ユーザが存在しない場合、例外が発生すること', async () => {
+      // Arrange
+      const userRepoSpy = jest
+        .spyOn(UserRepository.prototype, 'exist')
+        .mockResolvedValueOnce(false)
+
+      try {
+        // Act
+        const target = new UserService(new UserRepository(prisma))
+        await target.checkExist({ userId: '123' })
+        fail('should not reach here!')
+      } catch (e) {
+        // Assert
+        expect(e.message).toBe('ユーザーが存在しません')
+      }
+    })
+  })
 })
