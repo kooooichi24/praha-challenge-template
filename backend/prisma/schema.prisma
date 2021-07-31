@@ -32,12 +32,12 @@ model Tasks {
 
 model UserTaskStatus {
   status ProgressStatus @default(TODO)
-  UserId String
-  TaskId String
-  User   Users          @relation(fields: [UserId], references: [id])
-  Task   Tasks          @relation(fields: [TaskId], references: [id])
+  userId String
+  taskId String
+  User   Users          @relation(fields: [userId], references: [id])
+  Task   Tasks          @relation(fields: [taskId], references: [id])
 
-  @@id([UserId, TaskId])
+  @@id([userId, taskId])
 }
 
 enum ProgressStatus {
