@@ -1,5 +1,5 @@
 import { User } from 'src/domain/user/entity/user'
-import { UserDTO } from '../query-service-interface/user-qs'
+import { UserDTO } from '../../user/query-service-interface/user-qs'
 
 export class UserConverter {
   public convertToDto(userEntity: User): UserDTO {
