@@ -13,7 +13,6 @@ export class PostUserUseCase {
   }
   public async do(params: { name: string; mail: string }): Promise<void> {
     const { name, mail } = params
-
     const userEntity = new User({
       id: createRandomIdString(),
       name,
