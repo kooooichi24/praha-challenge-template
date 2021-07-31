@@ -9,7 +9,17 @@ export class TaskStatusRepository implements ITaskStatusRepository {
     this.prismaClient = prismaClient
   }
 
-  async getByUserId(userId: string): Promise<UserTaskStatus> {
-    throw new Error('Method not implemented.')
+  async getByUserId(userId: string): Promise<UserTaskStatus[]> {
+    const userTasksStatus = await this.prismaClient.userTaskStatus.findMany({
+      where: {
+        userId,
+      },
+    })
+
+    const result = userTasksStatus.map((userTaskStatus) => {
+      return new UserTaskStatus({ ...userTaskStatus })
+    })
+
+    return result
   }
 }
