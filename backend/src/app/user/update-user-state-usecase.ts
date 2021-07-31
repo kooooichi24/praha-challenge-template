@@ -1,5 +1,4 @@
 import { User } from 'src/domain/user/entity/user'
-import { UserService } from 'src/domain/user/service/user-service'
 import { UserConverter } from '../share/converter/user-converter'
 import { IUserQS } from './query-service-interface/user-qs'
 import { IUserRepository } from './repository-interface/user-repository'
@@ -8,13 +7,11 @@ export class UpdateUserStateUseCase {
   private readonly userRepo: IUserRepository
   private readonly userQS: IUserQS
   private readonly userConverter: UserConverter
-  private readonly userService: UserService
 
   public constructor(userRepo: IUserRepository, userQS: IUserQS) {
     this.userRepo = userRepo
     this.userQS = userQS
     this.userConverter = new UserConverter()
-    this.userService = new UserService(this.userRepo)
   }
 
   public async do(params: {
@@ -23,7 +20,6 @@ export class UpdateUserStateUseCase {
   }): Promise<User> {
     const { id, status } = params
 
-    await this.userService.checkExist({ userId: id })
     const userDTO = await this.userQS.findById(id)
     // TODO これは果たして例外なのか？
     if (!userDTO) {

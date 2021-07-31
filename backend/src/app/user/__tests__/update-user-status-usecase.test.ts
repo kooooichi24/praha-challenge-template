@@ -4,7 +4,6 @@ import { User } from 'src/domain/user/entity/user'
 import { UpdateUserStateUseCase } from '../update-user-state-usecase'
 import { UserQS } from 'src/infra/db/query-service/user/user-qs'
 import { UserDTO } from '../query-service-interface/user-qs'
-import { UserService } from 'src/domain/user/service/user-service'
 
 describe('do', () => {
   const prisma = new PrismaClient()
@@ -21,11 +20,6 @@ describe('do', () => {
       name: 'name',
       status: 'ENROLLMENT',
     })
-    const userServiceSpy = jest
-      .spyOn(UserService.prototype, 'checkExist')
-      .mockImplementation(async (params) => {
-        // noop
-      })
     const userQSSpy = jest
       .spyOn(UserQS.prototype, 'findById')
       .mockResolvedValueOnce(mockResponseUserDTO)
@@ -53,7 +47,6 @@ describe('do', () => {
     const actual = await usecase.do({ id: '123', status: 'RECESS' })
 
     // Assert
-    expect(userServiceSpy).toHaveBeenLastCalledWith({ userId: '123' })
     expect(userQSSpy).toHaveBeenLastCalledWith('123')
     expect(userRepoSpy).toHaveBeenLastCalledWith(expected)
     expect(actual).toStrictEqual(expected)
@@ -62,11 +55,6 @@ describe('do', () => {
   it('[異常系]: idに該当するユーザーが存在しない場合、例外が発生する', async () => {
     // Arrange
     const ERROR_MESSAGE = 'idに該当するユーザーが存在しません'
-    const userServiceSpy = jest
-      .spyOn(UserService.prototype, 'checkExist')
-      .mockImplementation(async (params) => {
-        // noop
-      })
     const userQSSpy = jest
       .spyOn(UserQS.prototype, 'findById')
       .mockResolvedValueOnce(undefined)
@@ -82,27 +70,6 @@ describe('do', () => {
     } catch (error) {
       // Assert
       expect(error.message).toBe(ERROR_MESSAGE)
-    }
-  })
-
-  it('[異常系]: ユーザーが存在しない場合、例外が発生する', async () => {
-    // Arrange
-    const ERROR_MESSAGE = 'ユーザーが存在しません'
-    const userServiceSpy = jest
-      .spyOn(UserService.prototype, 'checkExist')
-      .mockRejectedValue(ERROR_MESSAGE)
-
-    try {
-      // Act
-      const usecase = new UpdateUserStateUseCase(
-        new UserRepository(prisma),
-        new UserQS(prisma),
-      )
-      await usecase.do({ id: '123', status: 'RECESS' })
-      fail('can not reach here!')
-    } catch (error) {
-      // Assert
-      expect(error).toBe(ERROR_MESSAGE)
     }
   })
 })
