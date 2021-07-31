@@ -1,22 +1,25 @@
 import { UserTaskStatus } from 'src/domain/user-task-status/entity/user-task-status'
-import { IUserQS } from '../user/query-service-interface/user-qs'
+import { UserService } from 'src/domain/user/service/user-service'
+import { IUserRepository } from '../user/repository-interface/user-repository'
 import { ITaskStatusRepository } from './repository-interface/task-status-repository'
 
 export class GetTaskStatusUseCase {
   private readonly taskStatusRepo: ITaskStatusRepository
-  private readonly userQS: IUserQS
+  private readonly userRepo: IUserRepository
+  private readonly userService: UserService
 
-  public constructor(taskStatusRepo: ITaskStatusRepository, userQS: IUserQS) {
+  public constructor(
+    taskStatusRepo: ITaskStatusRepository,
+    userRepo: IUserRepository,
+  ) {
     this.taskStatusRepo = taskStatusRepo
-    this.userQS = userQS
+    this.userRepo = userRepo
+    this.userService = new UserService(this.userRepo)
   }
 
   public async do(params: { userId: string }): Promise<UserTaskStatus[]> {
     const { userId } = params
-    const userDTO = await this.userQS.findById(userId)
-    if (!userDTO) {
-      throw Error('idに該当するユーザーが存在しません')
-    }
+    await this.userService.checkExist({ userId })
 
     return await this.taskStatusRepo.getByUserId(userId)
   }
