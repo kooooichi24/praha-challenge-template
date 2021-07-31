@@ -5,7 +5,7 @@ import { GetByUserIdRouteParameters } from './route-parameters/get-by-user-id-ro
 import { GetByUserIdResponse } from './response/get-by-user-id-response'
 import { TaskStatusRepository } from 'src/infra/db/repository/task-status/task-status-repository'
 import { GetTaskStatusUseCase } from 'src/app/task-status/get-task-status-usecase'
-import { UserQS } from 'src/infra/db/query-service/user/user-qs'
+import { UserRepository } from 'src/infra/db/repository/user/user-repository'
 
 @Controller({
   path: '/task-status',
@@ -21,9 +21,9 @@ export class TaskStatusController {
     console.log('task-status controller called.')
 
     const prisma = new PrismaClient()
-    const repo = new TaskStatusRepository(prisma)
-    const qs = new UserQS(prisma)
-    const usecase = new GetTaskStatusUseCase(repo, qs)
+    const taskStatusRepo = new TaskStatusRepository(prisma)
+    const userRepo = new UserRepository(prisma)
+    const usecase = new GetTaskStatusUseCase(taskStatusRepo, userRepo)
     const result = await usecase.do({ userId: params.userId })
     const response = new GetByUserIdResponse({ tasks: result })
     return response
