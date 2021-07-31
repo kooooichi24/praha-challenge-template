@@ -26,11 +26,13 @@ describe('do', () => {
     const userQSSpy = jest
       .spyOn(UserQS.prototype, 'findById')
       .mockResolvedValue(mockResponseUserDTO)
-    const mockResponseUserTaskStatus: UserTaskStatus = new UserTaskStatus({
-      userId: '1',
-      taskId: '1',
-      status: 'TODO',
-    })
+    const mockResponseUserTaskStatus: UserTaskStatus[] = [
+      new UserTaskStatus({
+        userId: '1',
+        taskId: '1',
+        status: 'TODO',
+      }),
+    ]
     const taskStatusRepoSpy = jest
       .spyOn(TaskStatusRepository.prototype, 'getByUserId')
       .mockResolvedValue(mockResponseUserTaskStatus)
