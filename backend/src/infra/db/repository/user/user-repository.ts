@@ -61,4 +61,15 @@ export class UserRepository implements IUserRepository {
     const updatedUserEntity = new User({ ...updatedUserDataModel })
     return updatedUserEntity
   }
+
+  public async exist(userId: string): Promise<boolean> {
+    const found = await this.prismaClient.users.findUnique({
+      where: { id: userId },
+    })
+
+    if (found) {
+      return true
+    }
+    return false
+  }
 }

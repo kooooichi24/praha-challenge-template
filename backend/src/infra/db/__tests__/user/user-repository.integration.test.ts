@@ -142,4 +142,45 @@ describe('user-repository.integration.ts', () => {
       expect(actual[0]).toEqual(expected)
     })
   })
+
+  describe('exist', () => {
+    afterEach(async () => {
+      await prisma.users.deleteMany({})
+    })
+
+    it('[正常系]: ユーザが存在している場合、trueを返すこと', async () => {
+      // Arrange
+      const targetId = createRandomIdString()
+      const userEntity = new User({
+        id: targetId,
+        name: 'testName',
+        mail: 'test@gmail.com',
+        status: 'ENROLLMENT',
+      })
+      await prisma.users.create({ data: userEntity.getAllProperties() })
+
+      // Act
+      const actual = await userRepository.exist(targetId)
+
+      // Assert
+      expect(actual).toBeTruthy()
+    })
+
+    it('[正常系]: ユーザが存在していない場合、falseを返すこと', async () => {
+      // Arrange
+      const userEntity = new User({
+        id: createRandomIdString(),
+        name: 'testName',
+        mail: 'test@gmail.com',
+        status: 'ENROLLMENT',
+      })
+      await prisma.users.create({ data: userEntity.getAllProperties() })
+
+      // Act
+      const actual = await userRepository.exist('evalId')
+
+      // Assert
+      expect(actual).toBeFalsy()
+    })
+  })
 })
