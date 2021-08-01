@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Param } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Param, Put } from '@nestjs/common'
 import { ApiResponse } from '@nestjs/swagger'
 import { PrismaClient } from '@prisma/client'
 import { GetByUserIdRouteParameters } from './route-parameters/get-by-user-id-route-parameters'
@@ -6,6 +6,10 @@ import { GetByUserIdResponse } from './response/get-by-user-id-response'
 import { TaskStatusRepository } from 'src/infra/db/repository/task-status/task-status-repository'
 import { GetTaskStatusUseCase } from 'src/app/task-status/get-task-status-usecase'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
+import { UpdateRouteParameters } from './route-parameters/update-route-parameters'
+import { UpdateRequest } from './request/update-request'
+import { UpdateResponse } from './response/update-response'
+import { UpdateUserTaskStatusUseCase } from 'src/app/task-status/update-task-status-usecase'
 
 @Controller({
   path: '/task-status',
@@ -40,18 +44,22 @@ export class TaskStatusController {
   //   await usecase.do({ id: params.id })
   // }
 
-  // @Put(':id')
-  // @HttpCode(200)
-  // @ApiResponse({ status: 200, type: UpdateTaskStatusResponse })
-  // async update(
-  //   @Param() params: UpdateTaskStatusRouteParameters,
-  //   @Body() request: UpdateTaskStatusRequest,
-  // ): Promise<UpdateTaskStatusResponse> {
-  //   const prisma = new PrismaClient()
-  //   const repo = new TaskStatusRepository(prisma)
-  //   const usecase = new UpdateUserStateUseCase(repo)
-  //   const result = await usecase.do({ id: params.id, status: request.status })
-  //   const response = new UpdateUserResponse({ ...result.getAllProperties() })
-  //   return response
-  // }
+  @Put(':userId')
+  @HttpCode(200)
+  @ApiResponse({ status: 200, type: UpdateResponse })
+  async update(
+    @Param() params: UpdateRouteParameters,
+    @Body() request: UpdateRequest,
+  ): Promise<UpdateResponse> {
+    const prisma = new PrismaClient()
+    const repo = new TaskStatusRepository(prisma)
+    const usecase = new UpdateUserTaskStatusUseCase(repo)
+    const result = await usecase.do({
+      userId: params.userId,
+      taskId: request.taskId,
+      status: request.status,
+    })
+    const response = new UpdateResponse({ ...result.getAllProperties() })
+    return response
+  }
 }
