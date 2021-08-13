@@ -6,17 +6,15 @@ import { createRandomIdString } from 'src/util/random'
 describe('user-repository.integration.ts', () => {
   const userRepository = new UserRepository(prisma)
 
-  beforeAll(async () => {
+  afterEach(async () => {
     await prisma.users.deleteMany({})
   })
+
   afterAll(async () => {
     await prisma.$disconnect()
   })
 
   describe('findAll', () => {
-    afterEach(async () => {
-      await prisma.users.deleteMany({})
-    })
     test('[正常系] ユーザが存在する場合、全てのユーザーを返却すること', async () => {
       // Arrange
       const expected = [
@@ -62,10 +60,6 @@ describe('user-repository.integration.ts', () => {
   })
 
   describe('getByMail', () => {
-    afterEach(async () => {
-      await prisma.users.deleteMany({})
-    })
-
     it('[正常系] mailに一致したユーザが存在する場合、ユーザエンティティを返却すること', async () => {
       // Arrange
       const expectedUserEntity = new User({
@@ -102,10 +96,6 @@ describe('user-repository.integration.ts', () => {
   })
 
   describe('save', () => {
-    afterEach(async () => {
-      await prisma.users.deleteMany({})
-    })
-
     it('[正常系]userを保存できる', async () => {
       // Arrange
       const expectedUserEntity = new User({
@@ -126,10 +116,6 @@ describe('user-repository.integration.ts', () => {
   })
 
   describe('delete', () => {
-    afterEach(async () => {
-      await prisma.users.deleteMany({})
-    })
-
     it('[正常系]idに合致したuserを削除できる', async () => {
       // Arrange
       const deleteId = createRandomIdString()
@@ -160,10 +146,6 @@ describe('user-repository.integration.ts', () => {
   })
 
   describe('updateStatus', () => {
-    afterEach(async () => {
-      await prisma.users.deleteMany({})
-    })
-
     it('[正常系]: statusを更新できる', async () => {
       // Arrange
       const targetId = createRandomIdString()
@@ -192,10 +174,6 @@ describe('user-repository.integration.ts', () => {
   })
 
   describe('exist', () => {
-    afterEach(async () => {
-      await prisma.users.deleteMany({})
-    })
-
     it('[正常系]: ユーザが存在している場合、trueを返すこと', async () => {
       // Arrange
       const targetId = createRandomIdString()
