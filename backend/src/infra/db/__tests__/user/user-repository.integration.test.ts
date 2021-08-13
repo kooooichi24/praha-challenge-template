@@ -13,6 +13,54 @@ describe('user-repository.integration.ts', () => {
     await prisma.$disconnect()
   })
 
+  describe('findAll', () => {
+    afterEach(async () => {
+      await prisma.users.deleteMany({})
+    })
+    test('[正常系] ユーザが存在する場合、全てのユーザーを返却すること', async () => {
+      // Arrange
+      const expected = [
+        new User({
+          id: '1',
+          name: 'name1',
+          mail: 'mail1@gmai.com',
+          status: 'ENROLLMENT',
+        }),
+        new User({
+          id: '2',
+          name: 'name2',
+          mail: 'mail2@gmai.com',
+          status: 'RECESS',
+        }),
+        new User({
+          id: '3',
+          name: 'name3',
+          mail: 'mail3@gmai.com',
+          status: 'LEFT',
+        }),
+      ]
+      await Promise.all(
+        expected.map(async (user: User) => {
+          const { id, name, mail, status } = user.getAllProperties()
+          await prisma.users.create({
+            data: {
+              id,
+              name,
+              mail,
+              status,
+            },
+          })
+        }),
+      )
+
+      // Act
+      const actual = await userRepository.findAll()
+
+      // Assert
+      expect(actual).toStrictEqual(expected)
+    })
+  })
+
   describe('getByMail', () => {
     afterEach(async () => {
       await prisma.users.deleteMany({})

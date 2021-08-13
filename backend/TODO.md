@@ -176,7 +176,7 @@
 #### 複数集約間（Task が作成されたとき）
 
 - [x] CreateTaskUsecase
-- [ ] UserRepository.findAll()
+- [x] UserRepository.findAll()
 - [ ] TaskStatusRepository.saveAll()
 
 #### 複数集約間（User が作成されたとき）

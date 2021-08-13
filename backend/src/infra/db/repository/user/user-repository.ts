@@ -10,7 +10,17 @@ export class UserRepository implements IUserRepository {
   }
 
   public async findAll(): Promise<User[]> {
-    throw new Error('Method not implemented.')
+    const usersData = await this.prismaClient.users.findMany({
+      orderBy: {
+        id: 'asc',
+      },
+    })
+
+    const usersEntity = usersData.map((user) => {
+      return new User({ ...user })
+    })
+
+    return usersEntity
   }
 
   public async getByMail(mail: string): Promise<User | undefined> {
