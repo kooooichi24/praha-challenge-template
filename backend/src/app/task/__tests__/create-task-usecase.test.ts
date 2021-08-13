@@ -8,6 +8,7 @@ import { TaskService } from 'src/domain/task/entity/service/task-service'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
 import { User } from 'src/domain/user/entity/user'
 import { TaskStatusRepository } from 'src/infra/db/repository/task-status/task-status-repository'
+import { UserTaskStatus } from 'src/domain/user-task-status/entity/user-task-status'
 
 jest.mock('uuidv4')
 
@@ -154,5 +155,35 @@ describe('do', () => {
       expect(e).toBe(ERROR_MESSAGE)
       expect(taskRepoSpy).toHaveBeenCalledTimes(0)
     }
+  })
+})
+
+describe('convertUsersToTaskStatusList', () => {
+  const prisma = new PrismaClient()
+  const usecase = new CreateTaskUseCase(
+    new TaskRepository(prisma),
+    new UserRepository(prisma),
+    new TaskStatusRepository(prisma),
+  )
+
+  test('[正常系]: 引数にUser[]とtaskIdを受け取った場合、UserTaskStatus[]に変換できる', () => {
+    // Arrange
+    const targetTaskId = '1'
+    const users = [
+      new User({ id: '1', name: '', mail: '' }),
+      new User({ id: '2', name: '', mail: '' }),
+      new User({ id: '3', name: '', mail: '' }),
+    ]
+    const expected = [
+      new UserTaskStatus({ userId: '1', taskId: targetTaskId, status: 'TODO' }),
+      new UserTaskStatus({ userId: '2', taskId: targetTaskId, status: 'TODO' }),
+      new UserTaskStatus({ userId: '3', taskId: targetTaskId, status: 'TODO' }),
+    ]
+
+    // Act
+    const actual = usecase['convertUsersToTaskStatusList'](users, targetTaskId)
+
+    // Assert
+    expect(actual).toStrictEqual(expected)
   })
 })
