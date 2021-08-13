@@ -15,6 +15,46 @@ describe('task-status-repository.integration.ts', () => {
     await prisma.$disconnect()
   })
 
+  describe('saveAll', () => {
+    test('[正常系] TaskStatus[]を保存できること', async () => {
+      // Arrange
+      const expected = [
+        { userId: '1', taskId: '1', status: 'TODO' },
+        { userId: '2', taskId: '2', status: 'REVIEWING' },
+        { userId: '3', taskId: '3', status: 'DONE' },
+      ]
+      await prisma.users.createMany({
+        data: [
+          { id: '1', name: '', mail: 'mail1@gmail.com' },
+          { id: '2', name: '', mail: 'mail2@gmail.com' },
+          { id: '3', name: '', mail: 'mail3@gmail.com' },
+        ],
+      })
+      await prisma.tasks.createMany({
+        data: [
+          { id: '1', title: 'title1', content: '' },
+          { id: '2', title: 'title2', content: '' },
+          { id: '3', title: 'title3', content: '' },
+        ],
+      })
+
+      const args = expected.map((data: any) => {
+        return new UserTaskStatus({
+          userId: data.userId,
+          taskId: data.taskId,
+          status: data.status,
+        })
+      })
+
+      // Act
+      await taskStatusRepository.saveAll(args)
+      const actual = await prisma.userTaskStatus.findMany({})
+
+      // Assert
+      expect(actual).toStrictEqual(expected)
+    })
+  })
+
   describe('getByUserId', () => {
     it('[正常系] userIDに対応するタスクが存在する場合、ユーザのタスクステータスを全権取得できること', async () => {
       // Arrange
