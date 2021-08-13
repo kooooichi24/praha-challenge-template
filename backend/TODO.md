@@ -166,22 +166,26 @@
   - [x] IT
     - [x] 正常系
   - [x] 実装
-- [ ] refactor
-  - [ ] check exists logic
-    - [ ] UT
-    - [ ]
+- [x] refactor
+  - [x] check exists logic
+    - [x] UT
+    - [x] 実装
 
 ### CREATE
 
+#### 複数集約間（Task が作成されたとき）
+
+- [x] CreateTaskUsecase
+- [ ] UserRepository.findAll()
+- [ ] TaskStatusRepository.saveAll()
+
+#### 複数集約間（User が作成されたとき）
+
 ### UPDATE
 
-- [ ] Controller
-  - [ ] 実装
-    - [ ] user.controller.ts
-      - [ ] request
-      - [ ] usecase
-      - [ ] repo
-  - [ ] API tool で確認
+- [x] Controller
+  - [x] 実装
+  - [x] API tool で確認
 - [ ] Usecase
   - [ ] UT
     - [ ] 正常系

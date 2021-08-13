@@ -9,6 +9,10 @@ export class UserRepository implements IUserRepository {
     this.prismaClient = prismaClient
   }
 
+  public async findAll(): Promise<User[]> {
+    throw new Error('Method not implemented.')
+  }
+
   public async getByMail(mail: string): Promise<User | undefined> {
     const userData = await this.prismaClient.users.findUnique({
       where: {

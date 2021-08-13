@@ -5,6 +5,8 @@ import { CreateTaskRequest } from './request/create-user-request'
 import { CreateTaskResponse } from './response/create-task-response'
 import { TaskRepository } from 'src/infra/db/repository/task/task-repository'
 import { CreateTaskUseCase } from 'src/app/task/create-task-usecase'
+import { UserRepository } from 'src/infra/db/repository/user/user-repository'
+import { TaskStatusRepository } from 'src/infra/db/repository/task-status/task-status-repository'
 
 @Controller({
   path: '/task',
@@ -18,8 +20,11 @@ export class TaskController {
     @Body() request: CreateTaskRequest,
   ): Promise<CreateTaskResponse> {
     const prisma = new PrismaClient()
-    const repo = new TaskRepository(prisma)
-    const usecase = new CreateTaskUseCase(repo)
+    const usecase = new CreateTaskUseCase(
+      new TaskRepository(prisma),
+      new UserRepository(prisma),
+      new TaskStatusRepository(prisma),
+    )
 
     const task = await usecase.do({
       title: request.title,
