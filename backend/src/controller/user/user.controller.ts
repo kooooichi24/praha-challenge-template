@@ -22,6 +22,8 @@ import { UserRepository } from 'src/infra/db/repository/user/user-repository'
 import { UpdateUserRequest } from './request/update-user-request'
 import { UpdateUserResponse } from './response/update-user-response'
 import { UpdateUserStateUseCase } from 'src/app/user/update-user-state-usecase'
+import { TaskRepository } from 'src/infra/db/repository/task/task-repository'
+import { TaskStatusRepository } from 'src/infra/db/repository/task-status/task-status-repository'
 
 @Controller({
   path: '/user',
@@ -45,8 +47,11 @@ export class UserController {
   @ApiResponse({ status: 201 })
   async create(@Body() request: PostUserRequest): Promise<void> {
     const prisma = new PrismaClient()
-    const repo = new UserRepository(prisma)
-    const usecase = new CreateUserUsecase(repo)
+    const usecase = new CreateUserUsecase(
+      new UserRepository(prisma),
+      new TaskRepository(prisma),
+      new TaskStatusRepository(prisma),
+    )
     await usecase.do({ name: request.name, mail: request.mail })
   }
 

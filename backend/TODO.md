@@ -184,7 +184,7 @@
 
 #### 複数集約間（User が作成されたとき）
 
-- [ ] CreateUserUsecase
+- [x] CreateUserUsecase
 - [ ] TaskRepository.findAll()
 - [ ] TaskStatusRepository.saveAll()
 - [ ] API Tool で検証
