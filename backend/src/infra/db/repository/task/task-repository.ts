@@ -10,7 +10,17 @@ export class TaskRepository implements ITaskRepository {
   }
 
   public async findAll(): Promise<Task[]> {
-    throw new Error('Method not implemented.')
+    const tasksData = await this.prismaClient.tasks.findMany({
+      orderBy: {
+        id: 'asc',
+      },
+    })
+
+    const tasksEntity = tasksData.map((task) => {
+      return new Task({ ...task })
+    })
+
+    return tasksEntity
   }
 
   public async save(taskEntity: Task): Promise<Task> {
