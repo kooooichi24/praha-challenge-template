@@ -1,7 +1,7 @@
 import { UserTaskStatus } from 'src/domain/user-task-status/entity/user-task-status'
 import { ITaskStatusRepository } from './repository-interface/task-status-repository'
 
-export class UpdateUserTaskStatusUseCase {
+export class UpdateTaskStatusUsecase {
   private readonly taskStatusRepo: ITaskStatusRepository
 
   public constructor(taskStatusRepo: ITaskStatusRepository) {
@@ -15,6 +15,17 @@ export class UpdateUserTaskStatusUseCase {
   }): Promise<UserTaskStatus> {
     const { userId, taskId, status } = params
 
-    return new UserTaskStatus({ userId: '1', taskId: '1', status: 'TODO' })
+    const taskStatus = await this.taskStatusRepo.getByUserIdAndTaskId(
+      userId,
+      taskId,
+    )
+    if (!taskStatus) {
+      throw new Error('ユーザIDとタスクIDに該当するタスクは存在しません')
+    }
+
+    taskStatus.changeStatus(status)
+    await this.taskStatusRepo.save(taskStatus)
+
+    return taskStatus
   }
 }

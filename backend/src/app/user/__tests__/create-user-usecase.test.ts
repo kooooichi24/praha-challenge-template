@@ -123,13 +123,13 @@ describe('create-user-usecase', () => {
         .mockImplementation()
       userServiceSpy = jest
         .spyOn(UserService.prototype, 'duplicateMailCheck')
-        .mockImplementation()
+        .mockResolvedValue()
       taskRepoSpy = jest
         .spyOn(TaskRepository.prototype, 'findAll')
         .mockImplementation()
       taskStatusRepo = jest
         .spyOn(TaskStatusRepository.prototype, 'saveAll')
-        .mockImplementation()
+        .mockResolvedValue()
     }
   })
 

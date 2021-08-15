@@ -9,7 +9,7 @@ import { UserRepository } from 'src/infra/db/repository/user/user-repository'
 import { UpdateRouteParameters } from './route-parameters/update-route-parameters'
 import { UpdateRequest } from './request/update-request'
 import { UpdateResponse } from './response/update-response'
-import { UpdateUserTaskStatusUseCase } from 'src/app/task-status/update-task-status-usecase'
+import { UpdateTaskStatusUsecase } from 'src/app/task-status/update-task-status-usecase'
 
 @Controller({
   path: '/task-status',
@@ -33,17 +33,6 @@ export class TaskStatusController {
     return response
   }
 
-  // @Delete(':id')
-  // @HttpCode(204)
-  // @ApiResponse({ status: 204 })
-  // async remove(@Param() params: RemoveUserRouteParameters): Promise<void> {
-  //   const prisma = new PrismaClient()
-  //   const repo = new UserRepository(prisma)
-  //   const qs = new UserQS(prisma)
-  //   const usecase = new DeleteUserUseCase(repo, qs)
-  //   await usecase.do({ id: params.id })
-  // }
-
   @Put(':userId')
   @HttpCode(200)
   @ApiResponse({ status: 200, type: UpdateResponse })
@@ -53,7 +42,7 @@ export class TaskStatusController {
   ): Promise<UpdateResponse> {
     const prisma = new PrismaClient()
     const repo = new TaskStatusRepository(prisma)
-    const usecase = new UpdateUserTaskStatusUseCase(repo)
+    const usecase = new UpdateTaskStatusUsecase(repo)
     const result = await usecase.do({
       userId: params.userId,
       taskId: request.taskId,
