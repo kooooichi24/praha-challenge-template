@@ -33,6 +33,7 @@ export class CreateTaskUseCase {
       content,
     })
     await this.taskService.duplicateCheck(taskEntity)
+    const savedTask = await this.taskRepo.save(taskEntity)
 
     const users: User[] = await this.userRepo.findAll()
     const userTasksStatusList: UserTaskStatus[] = this.convertUsersToTaskStatusList(
@@ -42,7 +43,7 @@ export class CreateTaskUseCase {
 
     await this.taskStatusRepo.saveAll(userTasksStatusList)
 
-    return await this.taskRepo.save(taskEntity)
+    return savedTask
   }
 
   private convertUsersToTaskStatusList(
