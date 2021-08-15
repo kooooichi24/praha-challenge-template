@@ -178,9 +178,9 @@
 - [x] CreateTaskUsecase
 - [x] UserRepository.findAll()
 - [x] TaskStatusRepository.saveAll()
-- [ ] API Tool で検証
+- [x] API Tool で検証
   - [x] Case1(ユーザが存在していてタスクを作成した場合、UserTaskStatus が作成されていること)
-  - [ ] Case2(ユーザが存在していないときにタスクを作成した場合、)
+  - [x] Case2(ユーザが存在していないときにタスクを作成した場合、)
 
 #### 複数集約間（User が作成されたとき）
 
