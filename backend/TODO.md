@@ -186,8 +186,10 @@
 
 - [x] CreateUserUsecase
 - [x] TaskRepository.findAll()
-- [ ] TaskStatusRepository.saveAll()
-- [ ] API Tool で検証
+- [x] TaskStatusRepository.saveAll()
+- [x] API Tool で検証
+  - [x] Case1(タスクが存在していてユーザを作成した場合、UserTaskStatus が作成されていること)
+  - [x] Case2(タスクが存在していないときにユーザを作成した場合、UserTaskStatus が作成されていないこと)
 
 ### UPDATE
 
