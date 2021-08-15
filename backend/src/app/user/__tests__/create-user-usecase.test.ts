@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
-import { PostUserUseCase } from '../post-user-usecase'
+import { CreateUserUsecase } from '../create-user-usecase'
 import { User } from 'src/domain/user/entity/user'
 import { createRandomIdString } from 'src/util/random'
 import { uuid as uuidv4 } from 'uuidv4'
@@ -36,7 +36,7 @@ describe('do', () => {
       .mockResolvedValue()
 
     // Act
-    const usecase = new PostUserUseCase(new UserRepository(prisma))
+    const usecase = new CreateUserUsecase(new UserRepository(prisma))
     await usecase.do({ name: 'name', mail: 'mail@gmail.com' })
 
     // Assert
@@ -56,7 +56,7 @@ describe('do', () => {
 
     try {
       // Act
-      const usecase = new PostUserUseCase(new UserRepository(prisma))
+      const usecase = new CreateUserUsecase(new UserRepository(prisma))
       await usecase.do({ name: 'name', mail: 'mail@gmail.com' })
       fail('should not reach here!')
     } catch (e) {
@@ -83,7 +83,7 @@ describe('do', () => {
 
     try {
       // Act
-      const usecase = new PostUserUseCase(new UserRepository(prisma))
+      const usecase = new CreateUserUsecase(new UserRepository(prisma))
       await usecase.do({ name: 'name', mail: 'mail@gmail.com' })
       fail('should not reach here!')
     } catch (e) {

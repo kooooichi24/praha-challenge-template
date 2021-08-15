@@ -15,7 +15,7 @@ import { RemoveUserRouteParameters } from './route-parameters/remove-user-route-
 import { UpdateUserRouteParameters } from './route-parameters/update-user-route-parameters'
 import { GetAllUsersResponse } from './response/get-all-users-response'
 import { GetAllUsersUseCase } from '../../app/user/get-all-users-usecase'
-import { PostUserUseCase } from 'src/app/user/post-user-usecase'
+import { CreateUserUsecase } from 'src/app/user/create-user-usecase'
 import { DeleteUserUseCase } from 'src/app/user/delete-user-usecase'
 import { UserQS } from 'src/infra/db/query-service/user/user-qs'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
@@ -46,7 +46,7 @@ export class UserController {
   async create(@Body() request: PostUserRequest): Promise<void> {
     const prisma = new PrismaClient()
     const repo = new UserRepository(prisma)
-    const usecase = new PostUserUseCase(repo)
+    const usecase = new CreateUserUsecase(repo)
     await usecase.do({ name: request.name, mail: request.mail })
   }
 

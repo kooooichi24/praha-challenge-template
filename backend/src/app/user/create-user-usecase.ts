@@ -3,7 +3,7 @@ import { UserService } from 'src/domain/user/service/user-service'
 import { createRandomIdString } from 'src/util/random'
 import { IUserRepository } from './repository-interface/user-repository'
 
-export class PostUserUseCase {
+export class CreateUserUsecase {
   private readonly userRepo: IUserRepository
   private readonly userService: UserService
 

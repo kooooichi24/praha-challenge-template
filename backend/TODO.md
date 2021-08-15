@@ -184,6 +184,11 @@
 
 #### 複数集約間（User が作成されたとき）
 
+- [ ] CreateUserUsecase
+- [ ] TaskRepository.findAll()
+- [ ] TaskStatusRepository.saveAll()
+- [ ] API Tool で検証
+
 ### UPDATE
 
 - [x] Controller
