@@ -15,6 +15,41 @@ describe('task-status-repository.integration.ts', () => {
     await prisma.$disconnect()
   })
 
+  describe('save', () => {
+    test('[正常系] TaskStatusを保存できること', async () => {
+      // Arrange
+      const expected = { userId: '1', taskId: '1', status: 'DONE' }
+      await prisma.users.create({
+        data: {
+          id: '1',
+          name: '',
+          mail: 'mail1@gmail.com',
+        },
+      })
+      await prisma.tasks.create({
+        data: {
+          id: '1',
+          title: 'title1',
+          content: '',
+        },
+      })
+
+      const args = new UserTaskStatus({
+        userId: expected.userId,
+        taskId: expected.taskId,
+        status: expected.status as 'DONE' | 'TODO' | 'REVIEWING',
+      })
+
+      // Act
+      await taskStatusRepository.save(args)
+      const actual = await prisma.userTaskStatus.findMany({})
+
+      // Assert
+      expect(actual[0]).toStrictEqual(expected)
+      expect(actual).toHaveLength(1)
+    })
+  })
+
   describe('saveAll', () => {
     test('[正常系] TaskStatus[]を保存できること', async () => {
       // Arrange

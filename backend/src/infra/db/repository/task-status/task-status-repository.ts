@@ -31,7 +31,15 @@ export class TaskStatusRepository implements ITaskStatusRepository {
   }
 
   public async save(taskStatus: UserTaskStatus): Promise<void> {
-    throw new Error('Method not implemented.')
+    const { userId, taskId, status } = taskStatus.getAllProperties()
+
+    await this.prismaClient.userTaskStatus.create({
+      data: {
+        userId,
+        taskId,
+        status,
+      },
+    })
   }
 
   public async saveAll(taskStatusList: UserTaskStatus[]): Promise<void> {
