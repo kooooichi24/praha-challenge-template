@@ -201,10 +201,12 @@
     - [x] 正常系
     - [x] 異常系
   - [x] 実装
-- [ ] repository
-  - [ ] IT
-    - [ ] 正常系
-  - [ ] 実装
+- [x] repository
+  - [x] IT
+    - [x] 正常系
+  - [x] 実装
+- [x] Domain
+  - [x] UT
 
 ### READ
 
