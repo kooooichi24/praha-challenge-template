@@ -27,7 +27,20 @@ export class TaskStatusRepository implements ITaskStatusRepository {
     userId: string,
     taskId: string,
   ): Promise<UserTaskStatus | undefined> {
-    throw new Error('Method not implemented.')
+    const userTasksStatus = await this.prismaClient.userTaskStatus.findUnique({
+      where: {
+        userId_taskId: {
+          userId,
+          taskId,
+        },
+      },
+    })
+
+    if (!userTasksStatus) {
+      return undefined
+    }
+
+    return new UserTaskStatus({ ...userTasksStatus })
   }
 
   public async save(taskStatus: UserTaskStatus): Promise<void> {

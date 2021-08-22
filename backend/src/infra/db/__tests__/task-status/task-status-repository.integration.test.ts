@@ -142,4 +142,99 @@ describe('task-status-repository.integration.ts', () => {
       expect(actual).toEqual(expectedUserTaskStatusEntities)
     })
   })
+
+  describe('getByUserIdAndTaskId', () => {
+    test('[正常系] userIDとtaskIdに一致するタスクが存在する場合、タスクステータスを取得できること', async () => {
+      // Arrange
+      const expectedUserId = '1'
+      const expectedTaskId = '2'
+      const expected = new UserTaskStatus({
+        userId: expectedUserId,
+        taskId: expectedTaskId,
+        status: 'REVIEWING',
+      })
+
+      await prisma.users.createMany({
+        data: [
+          {
+            id: expectedUserId,
+            name: '',
+            mail: 'mail1@example.com',
+            status: 'ENROLLMENT',
+          },
+          {
+            id: '2',
+            name: '',
+            mail: 'mail2@example.com',
+            status: 'ENROLLMENT',
+          },
+        ],
+      })
+      await prisma.tasks.createMany({
+        data: [
+          {
+            id: '1',
+            title: 'title1',
+            content: '',
+          },
+          {
+            id: expectedTaskId,
+            title: 'title2',
+            content: '',
+          },
+        ],
+      })
+      await prisma.userTaskStatus.createMany({
+        data: [
+          { userId: expectedUserId, taskId: '1', status: 'TODO' },
+          {
+            userId: expectedUserId,
+            taskId: expectedTaskId,
+            status: 'REVIEWING',
+          },
+          { userId: '2', taskId: '1', status: 'DONE' },
+          { userId: '2', taskId: expectedTaskId, status: 'TODO' },
+        ],
+      })
+
+      // Act
+      const actual = await taskStatusRepository.getByUserIdAndTaskId(
+        expectedUserId,
+        expectedTaskId,
+      )
+
+      // Assert
+      expect(actual).toStrictEqual(expected)
+    })
+    test('[正常系] userIDとtaskIdに一致するタスクが存在しない場合、undefinedを取得できること', async () => {
+      // Arrange
+      await prisma.users.create({
+        data: {
+          id: '1',
+          name: '',
+          mail: 'mail1@example.com',
+          status: 'ENROLLMENT',
+        },
+      })
+      await prisma.tasks.create({
+        data: {
+          id: '1',
+          title: 'title1',
+          content: '',
+        },
+      })
+      await prisma.userTaskStatus.create({
+        data: { userId: '1', taskId: '1', status: 'TODO' },
+      })
+
+      // Act
+      const actual = await taskStatusRepository.getByUserIdAndTaskId(
+        '9999',
+        '9999',
+      )
+
+      // Assert
+      expect(actual).toBeUndefined()
+    })
+  })
 })
