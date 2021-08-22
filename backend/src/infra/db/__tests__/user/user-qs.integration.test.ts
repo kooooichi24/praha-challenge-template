@@ -49,7 +49,7 @@ describe('all-users-qs.integration.ts', () => {
       )
 
       // Act
-      const actual = await userQS.getAll()
+      const actual = await userQS.findAll()
 
       // Assert
       expect(actual).toEqual(usersExpected)

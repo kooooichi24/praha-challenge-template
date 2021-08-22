@@ -7,7 +7,7 @@ export class GetAllUsersUseCase {
   }
   public async do(): Promise<UserDTO[]> {
     try {
-      return await this.userQS.getAll()
+      return await this.userQS.findAll()
     } catch (error) {
       // memo: エラー処理
       throw error

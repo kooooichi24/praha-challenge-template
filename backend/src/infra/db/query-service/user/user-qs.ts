@@ -7,7 +7,7 @@ export class UserQS implements IUserQS {
     this.prismaClient = prismaClient
   }
 
-  public async getAll(): Promise<UserDTO[]> {
+  public async findAll(): Promise<UserDTO[]> {
     const allUsersDatas: Users[] = await this.prismaClient.users.findMany({
       orderBy: {
         id: 'asc',

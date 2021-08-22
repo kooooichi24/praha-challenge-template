@@ -38,21 +38,21 @@ describe('do', () => {
         status: 'ENROLLMENT',
       },
     ]
-    mockUserQS.getAll.mockResolvedValueOnce(mockResponseUserDTO)
+    mockUserQS.findAll.mockResolvedValueOnce(mockResponseUserDTO)
 
     // Act
     const usecase = new GetAllUsersUseCase(mockUserQS)
     const actual = await usecase.do()
 
     // Assert
-    expect(mockUserQS.getAll).toHaveBeenCalled()
+    expect(mockUserQS.findAll).toHaveBeenCalled()
     expect(actual).toStrictEqual(mockResponseUserDTO)
   })
 
-  it('[異常系]: allUsersQS.getAllで例外が発生した場合、例外が発生する', async () => {
+  it('[異常系]: allUsersQS.findAllで例外が発生した場合、例外が発生する', async () => {
     // Arrange
     const ERROR_MESSAGE = 'error!'
-    mockUserQS.getAll.mockRejectedValueOnce(ERROR_MESSAGE)
+    mockUserQS.findAll.mockRejectedValueOnce(ERROR_MESSAGE)
 
     try {
       // Act
