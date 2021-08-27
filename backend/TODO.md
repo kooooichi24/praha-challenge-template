@@ -117,7 +117,7 @@
 
 ### READ 系修正
 
-- [ ] Controller
+- [x] Controller
 - [x] UseCase: GetAllUsersUseCase
 - [x] Repository: UserQS
 
