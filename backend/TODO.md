@@ -118,8 +118,8 @@
 ### READ 系修正
 
 - [ ] Controller
-- [ ] UseCase: GetAllUsersUseCase
-- [ ] Repository: UserQS
+- [x] UseCase: GetAllUsersUseCase
+- [x] Repository: UserQS
 
 ## 課題
 
@@ -224,3 +224,4 @@
 - DB の unique 制約でエラー発生した場合は、どこでエラーハンドリングするの？
   - repository? usecase?
   - ドメインロジックだから domain??
+- CQRS を採用する際は、参照系で query-service を利用するけど、更新系の UseCase での存在チェックするときに利用するのは QS?Repository?個人的には存在チェックには Repository に findById を実装して対応したい。なぜなら、存在チェックに必要なデータモデルは Join とかしなくても済むから。

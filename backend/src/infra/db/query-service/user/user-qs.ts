@@ -8,16 +8,6 @@ export class UserQS implements IUserQS {
   }
 
   public async findAll(): Promise<UserDTO[]> {
-    const tmp = await this.prismaClient.users.findMany({
-      include: {
-        UserTask: true,
-      },
-      orderBy: {
-        id: 'asc',
-      },
-    })
-    console.log('includes result: ', tmp)
-
     const allUsersDatas = await this.prismaClient.users.findMany({
       include: {
         UserTask: true,
@@ -26,6 +16,7 @@ export class UserQS implements IUserQS {
         id: 'asc',
       },
     })
+
     return allUsersDatas.map(
       (userDM) =>
         new UserDTO({
