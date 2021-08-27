@@ -26,24 +26,32 @@ describe('all-users-qs.integration.ts', () => {
           name: 'furukawa',
           mail: 'furukawa@gmai.com',
           status: 'ENROLLMENT',
+          tasksStatus: [],
         }),
         new UserDTO({
           id: '2',
           name: 'nakano',
           mail: 'nakano@gmai.com',
           status: 'ENROLLMENT',
+          tasksStatus: [],
         }),
         new UserDTO({
           id: '3',
           name: 'sasaki',
           mail: 'sasaki@gmai.com',
           status: 'ENROLLMENT',
+          tasksStatus: [],
         }),
       ]
       await Promise.all(
         usersExpected.map(async (user: UserDTO) => {
           await prisma.users.create({
-            data: user,
+            data: {
+              id: user.id,
+              name: user.name,
+              mail: user.mail,
+              status: user.status,
+            },
           })
         }),
       )
@@ -64,14 +72,21 @@ describe('all-users-qs.integration.ts', () => {
     it('[正常系]idに合致したuserを取得できる', async () => {
       // Arrange
       const id = createRandomIdString()
-      const user: UserDTO = {
+      const expected = new UserDTO({
         id,
         name: 'name',
         mail: 'mail@gmail.com',
         status: 'ENROLLMENT',
-      }
-      const expected = new UserDTO(user)
-      await prisma.users.create({ data: user })
+        tasksStatus: [],
+      })
+      await prisma.users.create({
+        data: {
+          id,
+          name: 'name',
+          mail: 'mail@gmail.com',
+          status: 'ENROLLMENT',
+        },
+      })
 
       // Act
       const actual = await userQS.findById(id)

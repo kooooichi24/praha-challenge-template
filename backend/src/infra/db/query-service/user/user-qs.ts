@@ -8,7 +8,20 @@ export class UserQS implements IUserQS {
   }
 
   public async findAll(): Promise<UserDTO[]> {
-    const allUsersDatas: Users[] = await this.prismaClient.users.findMany({
+    const tmp = await this.prismaClient.users.findMany({
+      include: {
+        UserTask: true,
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    })
+    console.log('includes result: ', tmp)
+
+    const allUsersDatas = await this.prismaClient.users.findMany({
+      include: {
+        UserTask: true,
+      },
       orderBy: {
         id: 'asc',
       },
@@ -16,13 +29,20 @@ export class UserQS implements IUserQS {
     return allUsersDatas.map(
       (userDM) =>
         new UserDTO({
-          ...userDM,
+          id: userDM.id,
+          name: userDM.name,
+          mail: userDM.mail,
+          status: userDM.status,
+          tasksStatus: userDM.UserTask,
         }),
     )
   }
 
   public async findById(id: string): Promise<UserDTO | undefined> {
     const userData = await this.prismaClient.users.findUnique({
+      include: {
+        UserTask: true,
+      },
       where: {
         id,
       },
@@ -31,6 +51,12 @@ export class UserQS implements IUserQS {
       return undefined
     }
 
-    return new UserDTO({ ...userData })
+    return new UserDTO({
+      id: userData.id,
+      name: userData.name,
+      mail: userData.mail,
+      status: userData.status,
+      tasksStatus: userData.UserTask,
+    })
   }
 }

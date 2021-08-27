@@ -18,12 +18,6 @@ describe('do', () => {
 
   it('[正常系]: ユーザの課題を取得できること', async () => {
     // Arrange
-    const mockResponseUserDTO = new UserDTO({
-      id: '1',
-      mail: 'mail@gmail.com',
-      name: 'name',
-      status: 'ENROLLMENT',
-    })
     const userServiceSpy = jest
       .spyOn(UserService.prototype, 'checkExist')
       .mockImplementation(async (params) => {

@@ -19,6 +19,7 @@ describe('do', () => {
       mail: 'mail@gmail.com',
       name: 'name',
       status: 'ENROLLMENT',
+      tasksStatus: [],
     })
     const userQSSpy = jest
       .spyOn(UserQS.prototype, 'findById')
