@@ -214,9 +214,18 @@
 - [x] Domain
   - [x] UT
 
-### READ
-
 ### DELETE
+
+#### 複数間集約(User)
+
+- [x] usecase 修正
+- [ ] repository 修正(Referential actions
+      へ)
+- [ ] ApiTool 確認
+  - [ ] Case1: ユーザと対応する課題が存在しているときにユーザーを削除したら、どちらも削除されていること
+  - [ ] Case2: ユーザが存在していてと対応する課題が存在していないときにユーザーを削除したら、ユーザのみ削除されていること
+
+#### 複数間集約(Task)
 
 # memo
 

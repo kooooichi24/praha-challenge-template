@@ -69,4 +69,8 @@ export class TaskStatusRepository implements ITaskStatusRepository {
       data: taskStatusDatas,
     })
   }
+
+  public async deleteAll(taskStatusList: UserTaskStatus[]): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
 }

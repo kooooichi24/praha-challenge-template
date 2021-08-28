@@ -9,4 +9,5 @@ export interface ITaskStatusRepository {
   ): Promise<UserTaskStatus | undefined>
   save(taskStatus: UserTaskStatus): Promise<void>
   saveAll(taskStatusList: UserTaskStatus[]): Promise<void>
+  deleteAll(taskStatusList: UserTaskStatus[]): Promise<void>
 }

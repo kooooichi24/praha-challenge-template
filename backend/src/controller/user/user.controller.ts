@@ -60,9 +60,11 @@ export class UserController {
   @ApiResponse({ status: 204 })
   async remove(@Param() params: RemoveUserRouteParameters): Promise<void> {
     const prisma = new PrismaClient()
-    const repo = new UserRepository(prisma)
-    const qs = new UserQS(prisma)
-    const usecase = new DeleteUserUseCase(repo, qs)
+    const usecase = new DeleteUserUseCase(
+      new UserRepository(prisma),
+      new UserQS(prisma),
+      new TaskStatusRepository(prisma),
+    )
     await usecase.do({ id: params.id })
   }
 
