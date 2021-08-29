@@ -9,6 +9,24 @@ export class TaskQS implements ITaskQS {
   }
 
   public async findById(id: string): Promise<TaskDTO | undefined> {
-    throw new Error('Method not implemented.')
+    const taskData = await this.prismaClient.tasks.findUnique({
+      include: {
+        UserTask: true,
+      },
+      where: {
+        id,
+      },
+    })
+
+    if (!taskData) {
+      return undefined
+    }
+
+    return new TaskDTO({
+      id: taskData.id,
+      title: taskData.title,
+      content: taskData.content,
+      tasksStatus: taskData.UserTask,
+    })
   }
 }

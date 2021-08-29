@@ -3,7 +3,7 @@ import { UserQS } from '../../query-service/user/user-qs'
 import { UserDTO } from 'src/app/user/query-service-interface/user-qs'
 import { createRandomIdString } from 'src/util/random'
 
-describe('all-users-qs.integration.ts', () => {
+describe('user-qs.integration.ts', () => {
   const userQS = new UserQS(prisma)
 
   beforeAll(async () => {
