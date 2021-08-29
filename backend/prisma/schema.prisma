@@ -4,8 +4,8 @@ datasource db {
 }
 
 generator client {
-  previewFeatures = ["nativeTypes"]
   provider        = "prisma-client-js"
+  previewFeatures = ["nativeTypes", "referentialActions"]
 }
 
 // model
@@ -34,8 +34,8 @@ model UserTaskStatus {
   status ProgressStatus @default(TODO)
   userId String
   taskId String
-  User   Users          @relation(fields: [userId], references: [id])
-  Task   Tasks          @relation(fields: [taskId], references: [id])
+  User   Users          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Task   Tasks          @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@id([userId, taskId])
 }
