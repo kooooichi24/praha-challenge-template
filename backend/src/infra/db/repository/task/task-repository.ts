@@ -50,20 +50,7 @@ export class TaskRepository implements ITaskRepository {
     return new Task({ ...taskData })
   }
 
-  // public async save(userEntity: User): Promise<User> {
-  //   const { id, name, mail, status } = userEntity.getAllProperties()
-  //   const savedUserDataModel = await this.prismaClient.users.create({
-  //     data: {
-  //       id,
-  //       name,
-  //       mail,
-  //       status,
-  //     },
-  //   })
-
-  //   const savedUserEntity = new User({
-  //     ...savedUserDataModel,
-  //   })
-  //   return savedUserEntity
-  // }
+  public async delete(task: Task): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
 }

@@ -5,6 +5,6 @@ export interface ITaskRepository {
   findAll(): Promise<Task[]>
   save(task: Task): Promise<Task>
   getByTitle(title: string): Promise<Task | undefined>
-  // delete(user: User): Promise<User>
+  delete(task: Task): Promise<void>
   // updateStatus(user: User): Promise<User>
 }
