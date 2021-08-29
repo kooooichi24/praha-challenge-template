@@ -63,7 +63,6 @@ export class UserController {
     const usecase = new DeleteUserUseCase(
       new UserRepository(prisma),
       new UserQS(prisma),
-      new TaskStatusRepository(prisma),
     )
     await usecase.do({ id: params.id })
   }
