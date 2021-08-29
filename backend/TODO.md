@@ -236,7 +236,12 @@
 - [x] 実装
 - [x] UT
 
-#### 複数間集約(Task)
+#### Reposioty
+
+- [x] 実装
+- [x] IT
+
+#### 動作確認(ApiTool)
 
 # memo
 

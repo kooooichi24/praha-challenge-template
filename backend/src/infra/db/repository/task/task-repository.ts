@@ -50,7 +50,10 @@ export class TaskRepository implements ITaskRepository {
     return new Task({ ...taskData })
   }
 
-  public async delete(task: Task): Promise<void> {
-    throw new Error('Method not implemented.')
+  public async delete(taskEntity: Task): Promise<void> {
+    const { id } = taskEntity.getAllProperties()
+    await this.prismaClient.tasks.delete({
+      where: { id },
+    })
   }
 }

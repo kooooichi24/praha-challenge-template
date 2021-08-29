@@ -9,6 +9,7 @@ describe('task-repository.integration.ts', () => {
   afterEach(async () => {
     await prisma.users.deleteMany({})
     await prisma.tasks.deleteMany({})
+    await prisma.userTaskStatus.deleteMany({})
   })
 
   afterAll(async () => {
@@ -109,69 +110,68 @@ describe('task-repository.integration.ts', () => {
     })
   })
 
-  // describe('delete', () => {
-  //   afterEach(async () => {
-  //     await prisma.users.deleteMany({})
-  //   })
+  describe('delete', () => {
+    test('[正常系]idに合致したuserTaskStatusを削除できる', async () => {
+      // Arrange
+      const targetId = createRandomIdString()
+      const targetTask = new Task({
+        id: targetId,
+        title: 'title1',
+        content: 'content1',
+      })
+      const nonTargetId = createRandomIdString()
+      const nonTargetTask = new Task({
+        id: nonTargetId,
+        title: 'title2',
+        content: 'content2',
+      })
+      await prisma.tasks.createMany({
+        data: [targetTask.getAllProperties(), nonTargetTask.getAllProperties()],
+      })
 
-  //   it('[正常系]idに合致したuserを削除できる', async () => {
-  //     // Arrange
-  //     const deleteId = createRandomIdString()
-  //     const deleteUser = new User({
-  //       id: deleteId,
-  //       name: 'delete-san',
-  //       mail: 'delete@gmail.com',
-  //       status: 'ENROLLMENT',
-  //     })
-  //     const nonDeleteId = createRandomIdString()
-  //     const nonDeleteUser = new User({
-  //       id: nonDeleteId,
-  //       name: 'non-delete-san',
-  //       mail: 'non-delete@gmail.com',
-  //       status: 'ENROLLMENT',
-  //     })
-  //     await prisma.users.create({ data: deleteUser.getAllProperties() })
-  //     await prisma.users.create({ data: nonDeleteUser.getAllProperties() })
+      // Act
+      await taskRepository.delete(targetTask)
+      const actual = await prisma.tasks.findMany({})
 
-  //     // Act
-  //     await userRepository.delete(deleteUser)
-  //     const actual = await prisma.users.findMany({})
+      // Assert
+      expect(actual).toHaveLength(1)
+      expect(actual[0]).toEqual(nonTargetTask)
+    })
 
-  //     // Assert
-  //     expect(actual).toHaveLength(1)
-  //     expect(actual[0]).toEqual(nonDeleteUser)
-  //   })
-  // })
+    test('[正常系] タスクステータスが存在する場合、カスケード削除されること', async () => {
+      // Arrange
+      const targetId = createRandomIdString()
+      const targetTask = new Task({
+        id: targetId,
+        title: 'title1',
+        content: 'content1',
+      })
 
-  // describe('updateStatus', () => {
-  //   afterEach(async () => {
-  //     await prisma.users.deleteMany({})
-  //   })
+      await prisma.tasks.create({ data: targetTask.getAllProperties() })
+      await prisma.users.create({
+        data: {
+          id: '1',
+          name: 'name',
+          mail: 'mail@gmail.com',
+          status: 'ENROLLMENT',
+        },
+      })
+      await prisma.userTaskStatus.create({
+        data: {
+          userId: '1',
+          taskId: targetId,
+          status: 'TODO' as 'TODO' | 'REVIEWING' | 'DONE',
+        },
+      })
 
-  //   it('[正常系]: statusを更新できる', async () => {
-  //     // Arrange
-  //     const targetId = createRandomIdString()
-  //     const userEntity = new User({
-  //       id: targetId,
-  //       name: 'testName',
-  //       mail: 'test@gmail.com',
-  //       status: 'ENROLLMENT',
-  //     })
-  //     await prisma.users.create({ data: userEntity.getAllProperties() })
-  //     const expected = new User({
-  //       id: targetId,
-  //       name: 'testName',
-  //       mail: 'test@gmail.com',
-  //       status: 'RECESS',
-  //     })
+      // Act
+      await taskRepository.delete(targetTask)
+      const actualTasks = await prisma.tasks.findMany({})
+      const actualUserTaskStatus = await prisma.userTaskStatus.findMany({})
 
-  //     // Act
-  //     await userRepository.updateStatus(expected)
-  //     const actual = await prisma.users.findMany({})
-
-  //     // Assert
-  //     expect(actual).toHaveLength(1)
-  //     expect(actual[0]).toEqual(expected)
-  //   })
-  // })
+      // Assert
+      expect(actualTasks).toHaveLength(0)
+      expect(actualUserTaskStatus).toHaveLength(0)
+    })
+  })
 })
