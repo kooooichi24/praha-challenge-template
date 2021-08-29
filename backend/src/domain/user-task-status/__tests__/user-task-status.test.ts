@@ -48,7 +48,7 @@ describe('user-task-status', () => {
         try {
           userTaskStatus.changeStatus(after)
           fail('should not reach here')
-        } catch (e) {
+        } catch (e: any) {
           // Assert
           expect(e.message).toBe(ERROR_MESSAGE)
         }

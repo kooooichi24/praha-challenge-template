@@ -123,7 +123,7 @@ describe('do', () => {
       // Act
       await usecase.do({ id: deleteUserId })
       fail()
-    } catch (e) {
+    } catch (e: any) {
       // Assert
       expect(e.message).toBe('idに該当するユーザーが存在しません')
     }

@@ -51,7 +51,7 @@ describe('UserService', () => {
         const target = new UserService(new UserRepository(prisma))
         await target.duplicateMailCheck(request)
         fail('should not reach here!')
-      } catch (e) {
+      } catch (e: any) {
         // Assert
         expect(e.message).toBe('メールアドレスが重複しています!')
       }
@@ -84,7 +84,7 @@ describe('UserService', () => {
         const target = new UserService(new UserRepository(prisma))
         await target.checkExist({ userId: '123' })
         fail('should not reach here!')
-      } catch (e) {
+      } catch (e: any) {
         // Assert
         expect(e.message).toBe('ユーザーが存在しません')
       }

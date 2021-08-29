@@ -47,7 +47,7 @@ describe('TaskService', () => {
         const target = new TaskService(new TaskRepository(prisma))
         await target.duplicateCheck(request)
         fail('should not reach here!')
-      } catch (e) {
+      } catch (e: any) {
         // Assert
         expect(e.message).toBe('課題タイトルが重複しています!')
       }

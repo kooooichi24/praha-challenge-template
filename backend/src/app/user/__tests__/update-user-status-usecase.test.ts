@@ -68,7 +68,7 @@ describe('do', () => {
       )
       await usecase.do({ id: '123', status: 'RECESS' })
       fail('can not reach here!')
-    } catch (error) {
+    } catch (error: any) {
       // Assert
       expect(error.message).toBe(ERROR_MESSAGE)
     }

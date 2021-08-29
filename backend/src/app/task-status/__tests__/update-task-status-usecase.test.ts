@@ -65,7 +65,7 @@ describe('do', () => {
         status: 'REVIEWING',
       })
       fail('should not reach here!')
-    } catch (e) {
+    } catch (e: any) {
       // Assert
       expect(e.message).toBe(ERROR_MESSAGE)
     }
