@@ -219,8 +219,10 @@
 #### 複数間集約(User)
 
 - [x] usecase 修正
-- [ ] repository 修正(Referential actions
+- [x] repository 修正(Referential actions
       へ)
+  - [x] it 修正
+  - [ ] usecase 戻す
 - [ ] ApiTool 確認
   - [ ] Case1: ユーザと対応する課題が存在しているときにユーザーを削除したら、どちらも削除されていること
   - [ ] Case2: ユーザが存在していてと対応する課題が存在していないときにユーザーを削除したら、ユーザのみ削除されていること

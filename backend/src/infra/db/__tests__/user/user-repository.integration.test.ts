@@ -116,7 +116,7 @@ describe('user-repository.integration.ts', () => {
   })
 
   describe('delete', () => {
-    it('[正常系]idに合致したuserを削除できる', async () => {
+    test('[正常系]idに合致したuserを削除できる', async () => {
       // Arrange
       const deleteId = createRandomIdString()
       const deleteUser = new User({
@@ -142,6 +142,48 @@ describe('user-repository.integration.ts', () => {
       // Assert
       expect(actual).toHaveLength(1)
       expect(actual[0]).toEqual(nonDeleteUser)
+    })
+
+    describe('カスケード', () => {
+      afterEach(async () => {
+        await prisma.tasks.deleteMany({})
+        await prisma.userTaskStatus.deleteMany({})
+      })
+      test('[正常系] ユーザのタスクステータスが存在する場合、カスケード削除されること', async () => {
+        // Arrange
+        const deleteId = createRandomIdString()
+        const deleteUser = new User({
+          id: deleteId,
+          name: 'delete-san',
+          mail: 'delete@gmail.com',
+          status: 'ENROLLMENT',
+        })
+
+        await prisma.users.create({ data: deleteUser.getAllProperties() })
+        await prisma.tasks.create({
+          data: {
+            id: '1',
+            title: 'title',
+            content: 'content',
+          },
+        })
+        await prisma.userTaskStatus.create({
+          data: {
+            userId: deleteId,
+            taskId: '1',
+            status: 'TODO' as 'TODO' | 'REVIEWING' | 'DONE',
+          },
+        })
+
+        // Act
+        await userRepository.delete(deleteUser)
+        const actualUser = await prisma.users.findMany({})
+        const actualUserTaskStatus = await prisma.userTaskStatus.findMany({})
+
+        // Assert
+        expect(actualUser).toHaveLength(0)
+        expect(actualUserTaskStatus).toHaveLength(0)
+      })
     })
   })
 
