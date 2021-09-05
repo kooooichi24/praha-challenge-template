@@ -261,6 +261,17 @@
 
 ### DB モデル図
 
+## ペア集約
+
+### DB
+
+- [x] schema.prisma
+- [x] migration
+
+### ペアの一覧取得
+
+### ペアの更新(所属参加者の変更)
+
 # memo
 
 - エラーハンドリングが分からん。repository を呼び出す際に都度 try catch するの？

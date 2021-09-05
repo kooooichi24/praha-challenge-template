@@ -10,11 +10,12 @@ generator client {
 
 // model
 model Users {
-  id       String           @id @default(uuid())
-  name     String
-  mail     String           @unique
-  status   EnrollmentStatus @default(ENROLLMENT)
-  UserTask UserTaskStatus[]
+  id                String              @id @default(uuid())
+  name              String
+  mail              String              @unique
+  status            EnrollmentStatus    @default(ENROLLMENT)
+  UserTask          UserTaskStatus[]
+  UserBelongingPair UserBelongingPair[]
 }
 
 enum EnrollmentStatus {
@@ -44,4 +45,19 @@ enum ProgressStatus {
   TODO
   REVIEWING
   DONE
+}
+
+model Pairs {
+  id                String              @id @default(uuid())
+  name              String              @db.Char(1)
+  UserBelongingPair UserBelongingPair[]
+}
+
+model UserBelongingPair {
+  userId String
+  pairId String
+  User   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Pair   Pairs  @relation(fields: [pairId], references: [id], onDelete: Cascade)
+
+  @@id([userId, pairId])
 }
