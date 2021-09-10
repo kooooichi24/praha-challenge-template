@@ -1,5 +1,5 @@
-import { User } from 'src/domain/user/entity/user'
-import { ITaskStatusRepository } from '../task-status/repository-interface/task-status-repository'
+import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
+import { User } from 'src/domain/user/user'
 import { IUserQS } from './query-service-interface/user-qs'
 import { IUserRepository } from './repository-interface/user-repository'
 
@@ -19,7 +19,10 @@ export class DeleteUserUseCase {
     if (!userDTO) {
       throw Error('idに該当するユーザーが存在しません')
     }
-    const userEntity = new User({ ...userDTO })
+    const userEntity = User.create(
+      { name: userDTO.name, mail: userDTO.mail, status: userDTO.status },
+      new UniqueEntityID(userDTO.id),
+    )
     await this.userRepo.delete(userEntity)
   }
 }

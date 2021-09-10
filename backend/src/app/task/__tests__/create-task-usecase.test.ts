@@ -6,9 +6,10 @@ import { TaskRepository } from 'src/infra/db/repository/task/task-repository'
 import { CreateTaskUseCase } from '../create-task-usecase'
 import { TaskService } from 'src/domain/task/entity/service/task-service'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
-import { User } from 'src/domain/user/entity/user'
+import { User } from 'src/domain/user/user'
 import { TaskStatusRepository } from 'src/infra/db/repository/task-status/task-status-repository'
 import { UserTaskStatus } from 'src/domain/user-task-status/entity/user-task-status'
+import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
 
 jest.mock('uuidv4')
 
@@ -33,24 +34,30 @@ describe('do', () => {
       content: 'content',
     })
     const mockResponseUserList = [
-      new User({
-        id: '1',
-        name: 'name1',
-        mail: 'mail1@gmail.com',
-        status: 'ENROLLMENT',
-      }),
-      new User({
-        id: '2',
-        name: 'name2',
-        mail: 'mail2@gmail.com',
-        status: 'ENROLLMENT',
-      }),
-      new User({
-        id: '3',
-        name: 'name3',
-        mail: 'mail3@gmail.com',
-        status: 'RECESS',
-      }),
+      User.create(
+        {
+          name: 'name1',
+          mail: 'mail1@gmail.com',
+          status: 'ENROLLMENT',
+        },
+        new UniqueEntityID('1'),
+      ),
+      User.create(
+        {
+          name: 'name2',
+          mail: 'mail2@gmail.com',
+          status: 'ENROLLMENT',
+        },
+        new UniqueEntityID('2'),
+      ),
+      User.create(
+        {
+          name: 'name3',
+          mail: 'mail3@gmail.com',
+          status: 'RECESS',
+        },
+        new UniqueEntityID('3'),
+      ),
     ]
     const taskRepoSpy = jest
       .spyOn(TaskRepository.prototype, 'save')
@@ -85,24 +92,30 @@ describe('do', () => {
     // Arrange
     const ERROR_MESSAGE = 'error!'
     const mockResponseUserList = [
-      new User({
-        id: '1',
-        name: 'name1',
-        mail: 'mail1@gmail.com',
-        status: 'ENROLLMENT',
-      }),
-      new User({
-        id: '2',
-        name: 'name2',
-        mail: 'mail2@gmail.com',
-        status: 'ENROLLMENT',
-      }),
-      new User({
-        id: '3',
-        name: 'name3',
-        mail: 'mail3@gmail.com',
-        status: 'RECESS',
-      }),
+      User.create(
+        {
+          name: 'name1',
+          mail: 'mail1@gmail.com',
+          status: 'ENROLLMENT',
+        },
+        new UniqueEntityID('1'),
+      ),
+      User.create(
+        {
+          name: 'name2',
+          mail: 'mail2@gmail.com',
+          status: 'ENROLLMENT',
+        },
+        new UniqueEntityID('2'),
+      ),
+      User.create(
+        {
+          name: 'name3',
+          mail: 'mail3@gmail.com',
+          status: 'RECESS',
+        },
+        new UniqueEntityID('3'),
+      ),
     ]
     const taskRepoSpy = jest
       .spyOn(TaskRepository.prototype, 'save')
@@ -170,9 +183,9 @@ describe('convertUsersToTaskStatusList', () => {
     // Arrange
     const targetTaskId = '1'
     const users = [
-      new User({ id: '1', name: '', mail: '' }),
-      new User({ id: '2', name: '', mail: '' }),
-      new User({ id: '3', name: '', mail: '' }),
+      User.create({ name: '', mail: '' }, new UniqueEntityID('1')),
+      User.create({ name: '', mail: '' }, new UniqueEntityID('2')),
+      User.create({ name: '', mail: '' }, new UniqueEntityID('3')),
     ]
     const expected = [
       new UserTaskStatus({ userId: '1', taskId: targetTaskId, status: 'TODO' }),

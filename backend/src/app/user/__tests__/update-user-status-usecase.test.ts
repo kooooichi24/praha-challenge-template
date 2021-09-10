@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
-import { User } from 'src/domain/user/entity/user'
+import { User } from 'src/domain/user/user'
 import { UpdateUserStateUseCase } from '../update-user-state-usecase'
 import { UserQS } from 'src/infra/db/query-service/user/user-qs'
 import { UserDTO } from '../query-service-interface/user-qs'
+import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
 
 describe('do', () => {
   const prisma = new PrismaClient()
@@ -12,7 +13,7 @@ describe('do', () => {
     jest.restoreAllMocks()
   })
 
-  it('[正常系]: 例外が発生しない', async () => {
+  test('[正常系]: 例外が発生しない', async () => {
     // Arrange
     const mockResponseUserDTO = new UserDTO({
       id: '123',
@@ -24,21 +25,26 @@ describe('do', () => {
     const userQSSpy = jest
       .spyOn(UserQS.prototype, 'findById')
       .mockResolvedValueOnce(mockResponseUserDTO)
-    const mockResponseUser = new User({
-      id: '123',
-      mail: 'mail@gmail.com',
-      name: 'name',
-      status: 'RECESS',
-    })
+
+    const mockResponseUser = User.create(
+      {
+        mail: 'mail@gmail.com',
+        name: 'name',
+        status: 'RECESS',
+      },
+      new UniqueEntityID('123'),
+    )
     const userRepoSpy = jest
       .spyOn(UserRepository.prototype, 'updateStatus')
       .mockResolvedValueOnce(mockResponseUser)
-    const expected = new User({
-      id: '123',
-      mail: 'mail@gmail.com',
-      name: 'name',
-      status: 'RECESS',
-    })
+    const expected = User.create(
+      {
+        mail: 'mail@gmail.com',
+        name: 'name',
+        status: 'RECESS',
+      },
+      new UniqueEntityID('123'),
+    )
 
     // Act
     const usecase = new UpdateUserStateUseCase(
@@ -53,7 +59,7 @@ describe('do', () => {
     expect(actual).toStrictEqual(expected)
   })
 
-  it('[異常系]: idに該当するユーザーが存在しない場合、例外が発生する', async () => {
+  test('[異常系]: idに該当するユーザーが存在しない場合、例外が発生する', async () => {
     // Arrange
     const ERROR_MESSAGE = 'idに該当するユーザーが存在しません'
     const userQSSpy = jest

@@ -1,7 +1,7 @@
 import { TaskService } from 'src/domain/task/entity/service/task-service'
 import { Task } from 'src/domain/task/entity/task'
 import { UserTaskStatus } from 'src/domain/user-task-status/entity/user-task-status'
-import { User } from 'src/domain/user/entity/user'
+import { User } from 'src/domain/user/user'
 import { createRandomIdString } from 'src/util/random'
 import { ITaskStatusRepository } from '../task-status/repository-interface/task-status-repository'
 import { IUserRepository } from '../user/repository-interface/user-repository'
@@ -36,10 +36,8 @@ export class CreateTaskUseCase {
     const savedTask = await this.taskRepo.save(taskEntity)
 
     const users: User[] = await this.userRepo.findAll()
-    const userTasksStatusList: UserTaskStatus[] = this.convertUsersToTaskStatusList(
-      users,
-      taskId,
-    )
+    const userTasksStatusList: UserTaskStatus[] =
+      this.convertUsersToTaskStatusList(users, taskId)
 
     await this.taskStatusRepo.saveAll(userTasksStatusList)
 
@@ -52,7 +50,11 @@ export class CreateTaskUseCase {
   ): UserTaskStatus[] {
     return users.map((user) => {
       const { id } = user.getAllProperties()
-      return new UserTaskStatus({ userId: id, taskId, status: 'TODO' })
+      return new UserTaskStatus({
+        userId: id.toString(),
+        taskId,
+        status: 'TODO',
+      })
     })
   }
 }

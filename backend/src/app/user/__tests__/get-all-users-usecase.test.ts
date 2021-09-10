@@ -16,7 +16,7 @@ describe('do', () => {
     mockUserQS = mocked(new UserQS(prisma), true)
   })
 
-  it('[正常系]: UserDTO[]を取得できること', async () => {
+  test('[正常系]: UserDTO[]を取得できること', async () => {
     // Arrange
     const mockResponseUserDTO: UserDTO[] = [
       {
@@ -52,7 +52,7 @@ describe('do', () => {
     expect(actual).toStrictEqual(mockResponseUserDTO)
   })
 
-  it('[異常系]: allUsersQS.findAllで例外が発生した場合、例外が発生する', async () => {
+  test('[異常系]: allUsersQS.findAllで例外が発生した場合、例外が発生する', async () => {
     // Arrange
     const ERROR_MESSAGE = 'error!'
     mockUserQS.findAll.mockRejectedValueOnce(ERROR_MESSAGE)

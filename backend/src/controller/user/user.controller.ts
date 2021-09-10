@@ -79,7 +79,10 @@ export class UserController {
     const qs = new UserQS(prisma)
     const usecase = new UpdateUserStateUseCase(repo, qs)
     const result = await usecase.do({ id: params.id, status: request.status })
-    const response = new UpdateUserResponse({ ...result.getAllProperties() })
+    const response = new UpdateUserResponse({
+      ...result.getAllProperties(),
+      id: result.id.toString(),
+    })
     return response
   }
 }

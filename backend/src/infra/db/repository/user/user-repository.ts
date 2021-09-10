@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { IUserRepository } from 'src/app/user/repository-interface/user-repository'
-import { User } from 'src/domain/user/entity/user'
+import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
+import { User } from 'src/domain/user/user'
 
 export class UserRepository implements IUserRepository {
   private prismaClient: PrismaClient
@@ -17,7 +18,10 @@ export class UserRepository implements IUserRepository {
     })
 
     const usersEntity = usersData.map((user) => {
-      return new User({ ...user })
+      return User.create(
+        { name: user.name, mail: user.mail, status: user.status },
+        new UniqueEntityID(user.id),
+      )
     })
 
     return usersEntity
@@ -33,41 +37,46 @@ export class UserRepository implements IUserRepository {
       return undefined
     }
 
-    return new User({ ...userData })
+    return User.create(
+      { name: userData.name, mail: userData.mail, status: userData.status },
+      new UniqueEntityID(userData.id),
+    )
   }
 
-  public async save(userEntity: User): Promise<User> {
+  public async save(userEntity: User): Promise<void> {
     const { id, name, mail, status } = userEntity.getAllProperties()
-    const savedUserDataModel = await this.prismaClient.users.create({
+    await this.prismaClient.users.create({
       data: {
-        id,
+        id: id.toString(),
         name,
         mail,
         status,
       },
     })
-
-    const savedUserEntity = new User({
-      ...savedUserDataModel,
-    })
-    return savedUserEntity
   }
 
   public async delete(userEntity: User): Promise<void> {
     const { id } = userEntity.getAllProperties()
     await this.prismaClient.users.delete({
-      where: { id },
+      where: { id: id.toString() },
     })
   }
 
   public async updateStatus(userEntity: User): Promise<User> {
     const { id, status } = userEntity.getAllProperties()
     const updatedUserDataModel = await this.prismaClient.users.update({
-      where: { id },
+      where: { id: id.toString() },
       data: { status },
     })
 
-    const updatedUserEntity = new User({ ...updatedUserDataModel })
+    const updatedUserEntity = User.create(
+      {
+        name: updatedUserDataModel.name,
+        mail: updatedUserDataModel.mail,
+        status: updatedUserDataModel.status,
+      },
+      new UniqueEntityID(updatedUserDataModel.id),
+    )
     return updatedUserEntity
   }
 

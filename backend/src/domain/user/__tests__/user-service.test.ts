@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
-import { User } from 'src/domain/user/entity/user'
+import { User } from 'src/domain/user/user'
 import { createRandomIdString } from 'src/util/random'
 import { UserService } from 'src/domain/user/service/user-service'
 
@@ -14,42 +14,38 @@ describe('UserService', () => {
   })
 
   describe('duplicateMailCheck', () => {
-    it('[正常系]: メールアドレスが重複していない場合、例外が発生しないこと', async () => {
+    test('[正常系]: メールアドレスが重複していない場合、例外が発生しないこと', async () => {
       // Arrange
+      const user = User.create({
+        mail: 'mail@gmail.com',
+        name: 'name',
+      })
       const userRepoSpy = jest
         .spyOn(UserRepository.prototype, 'getByMail')
         .mockResolvedValueOnce(undefined)
-      const request = new User({
-        id: createRandomIdString(),
-        mail: 'mail@gmail.com',
-        name: 'name',
-        status: 'ENROLLMENT',
-      })
 
       // Act
       const target = new UserService(new UserRepository(prisma))
-      await target.duplicateMailCheck(request)
+      await target.duplicateMailCheck(user)
 
       // Assert
       expect(userRepoSpy).toHaveBeenLastCalledWith('mail@gmail.com')
     })
 
-    it('[異常系]: メールアドレスが重複している場合、例外が発生すること', async () => {
+    test('[異常系]: メールアドレスが重複している場合、例外が発生すること', async () => {
       // Arrange
-      const request = new User({
-        id: createRandomIdString(),
+      const user = User.create({
         mail: 'mail@gmail.com',
         name: 'name',
-        status: 'ENROLLMENT',
       })
       const userRepoSpy = jest
         .spyOn(UserRepository.prototype, 'getByMail')
-        .mockResolvedValueOnce(request)
+        .mockResolvedValueOnce(user)
 
       try {
         // Act
         const target = new UserService(new UserRepository(prisma))
-        await target.duplicateMailCheck(request)
+        await target.duplicateMailCheck(user)
         fail('should not reach here!')
       } catch (e: any) {
         // Assert
@@ -59,7 +55,7 @@ describe('UserService', () => {
   })
 
   describe('checkExist', () => {
-    it('[正常系]: ユーザが存在している場合、例外が発生しないこと', async () => {
+    test('[正常系]: ユーザが存在している場合、例外が発生しないこと', async () => {
       // Arrange
       const userRepoSpy = jest
         .spyOn(UserRepository.prototype, 'exist')
@@ -73,7 +69,7 @@ describe('UserService', () => {
       expect(userRepoSpy).toHaveBeenLastCalledWith('123')
     })
 
-    it('[異常系]: ユーザが存在しない場合、例外が発生すること', async () => {
+    test('[異常系]: ユーザが存在しない場合、例外が発生すること', async () => {
       // Arrange
       const userRepoSpy = jest
         .spyOn(UserRepository.prototype, 'exist')
