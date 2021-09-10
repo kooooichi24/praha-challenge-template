@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { IUserRepository } from 'src/app/user/repository-interface/user-repository'
+import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
 import { User } from 'src/domain/user/user'
 
 export class UserRepository implements IUserRepository {
@@ -17,7 +18,7 @@ export class UserRepository implements IUserRepository {
     })
 
     const usersEntity = usersData.map((user) => {
-      return new User({ ...user })
+      return User.create({ ...user }, new UniqueEntityID(user.id))
     })
 
     return usersEntity
@@ -33,41 +34,39 @@ export class UserRepository implements IUserRepository {
       return undefined
     }
 
-    return new User({ ...userData })
+    return User.create({ ...userData }, new UniqueEntityID(userData.id))
   }
 
-  public async save(userEntity: User): Promise<User> {
+  public async save(userEntity: User): Promise<void> {
     const { id, name, mail, status } = userEntity.getAllProperties()
-    const savedUserDataModel = await this.prismaClient.users.create({
+    await this.prismaClient.users.create({
       data: {
-        id,
+        id: id.toString(),
         name,
         mail,
         status,
       },
     })
-
-    const savedUserEntity = new User({
-      ...savedUserDataModel,
-    })
-    return savedUserEntity
   }
 
   public async delete(userEntity: User): Promise<void> {
     const { id } = userEntity.getAllProperties()
     await this.prismaClient.users.delete({
-      where: { id },
+      where: { id: id.toString() },
     })
   }
 
   public async updateStatus(userEntity: User): Promise<User> {
     const { id, status } = userEntity.getAllProperties()
     const updatedUserDataModel = await this.prismaClient.users.update({
-      where: { id },
+      where: { id: id.toString() },
       data: { status },
     })
 
-    const updatedUserEntity = new User({ ...updatedUserDataModel })
+    const updatedUserEntity = User.create(
+      { ...updatedUserDataModel },
+      new UniqueEntityID(updatedUserDataModel.id),
+    )
     return updatedUserEntity
   }
 
