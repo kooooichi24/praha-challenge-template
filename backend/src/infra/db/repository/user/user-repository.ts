@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { IUserRepository } from 'src/app/user/repository-interface/user-repository'
+import { DomainEvents } from 'src/domain/shared/events/DomainEvents'
 import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
 import { User } from 'src/domain/user/user'
 
@@ -68,6 +69,8 @@ export class UserRepository implements IUserRepository {
       where: { id: id.toString() },
       data: { status },
     })
+    // 本当はORMのHooksに頼りたいが、Prismaにはサポートされていないため、prisma処理後に記述する
+    DomainEvents.dispatchEventsForAggregate(id)
 
     const updatedUserEntity = User.create(
       {

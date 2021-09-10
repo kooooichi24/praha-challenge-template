@@ -2,7 +2,7 @@ import { IDomainEvent } from '../../shared/events/IDomainEvent'
 import { UniqueEntityID } from '../../shared/UniqueEntityID'
 import { User } from '../user'
 
-export class UserRecessedOrLeft implements IDomainEvent {
+export class UserRecessedOrLeftEvent implements IDomainEvent {
   public dateTimeOccurred: Date
   public user: User
 

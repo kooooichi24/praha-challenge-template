@@ -1,6 +1,6 @@
 import { AggregateRoot } from '../shared/AggregateRoot'
 import { UniqueEntityID } from '../shared/UniqueEntityID'
-import { UserRecessedOrLeft } from './events/userRecessedOrLeft'
+import { UserRecessedOrLeftEvent } from './events/userRecessedOrLeftEvent'
 
 interface UserProps {
   name: string
@@ -27,7 +27,7 @@ export class User extends AggregateRoot<UserProps> {
 
   public changeStatus(status: 'ENROLLMENT' | 'RECESS' | 'LEFT') {
     if (status === 'RECESS' || status === 'LEFT') {
-      this.addDomainEvent(new UserRecessedOrLeft(this))
+      this.addDomainEvent(new UserRecessedOrLeftEvent(this))
     }
     this.props.status = status
   }
