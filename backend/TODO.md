@@ -270,6 +270,14 @@
 
 ### ペアの一覧取得
 
+#### Domain Model 作成
+
+#### Controller
+
+#### Usecase
+
+#### Repository
+
 ### ペアの更新(所属参加者の変更)
 
 # memo
