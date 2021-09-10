@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
-import { User } from 'src/domain/user/entity/user'
+import { User } from 'src/domain/user/user'
 import { UpdateUserStateUseCase } from '../update-user-state-usecase'
 import { UserQS } from 'src/infra/db/query-service/user/user-qs'
 import { UserDTO } from '../query-service-interface/user-qs'

@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
 import { UserQS } from 'src/infra/db/query-service/user/user-qs'
 import { DeleteUserUseCase } from '../delete-user-usecase'
-import { User } from 'src/domain/user/entity/user'
+import { User } from 'src/domain/user/user'
 import { createRandomIdString } from 'src/util/random'
 import { UserDTO } from '../query-service-interface/user-qs'
 

@@ -1,6 +1,6 @@
 import { Task } from 'src/domain/task/entity/task'
 import { UserTaskStatus } from 'src/domain/user-task-status/entity/user-task-status'
-import { User } from 'src/domain/user/entity/user'
+import { User } from 'src/domain/user/user'
 import { UserService } from 'src/domain/user/service/user-service'
 import { createRandomIdString } from 'src/util/random'
 import { ITaskStatusRepository } from '../task-status/repository-interface/task-status-repository'

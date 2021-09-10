@@ -1,6 +1,6 @@
 import { prisma } from '@testUtil/prisma'
 import { UserRepository } from '../../repository/user/user-repository'
-import { User } from 'src/domain/user/entity/user'
+import { User } from 'src/domain/user/user'
 import { createRandomIdString } from 'src/util/random'
 
 describe('user-repository.integration.ts', () => {

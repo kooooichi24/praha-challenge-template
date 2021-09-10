@@ -6,7 +6,7 @@ import { TaskRepository } from 'src/infra/db/repository/task/task-repository'
 import { CreateTaskUseCase } from '../create-task-usecase'
 import { TaskService } from 'src/domain/task/entity/service/task-service'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
-import { User } from 'src/domain/user/entity/user'
+import { User } from 'src/domain/user/user'
 import { TaskStatusRepository } from 'src/infra/db/repository/task-status/task-status-repository'
 import { UserTaskStatus } from 'src/domain/user-task-status/entity/user-task-status'
 

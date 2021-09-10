@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
 import { CreateUserUsecase } from '../create-user-usecase'
-import { User } from 'src/domain/user/entity/user'
+import { User } from 'src/domain/user/user'
 import { createRandomIdString } from 'src/util/random'
 import { uuid as uuidv4 } from 'uuidv4'
 import { UserService } from 'src/domain/user/service/user-service'

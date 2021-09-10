@@ -1,5 +1,5 @@
 import { IUserRepository } from 'src/app/user/repository-interface/user-repository'
-import { User } from '../entity/user'
+import { User } from '../user'
 
 export class UserService {
   private readonly userRepo: IUserRepository

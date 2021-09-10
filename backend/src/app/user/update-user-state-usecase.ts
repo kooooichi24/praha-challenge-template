@@ -1,4 +1,4 @@
-import { User } from 'src/domain/user/entity/user'
+import { User } from 'src/domain/user/user'
 import { UserConverter } from '../share/converter/user-converter'
 import { IUserQS } from './query-service-interface/user-qs'
 import { IUserRepository } from './repository-interface/user-repository'
