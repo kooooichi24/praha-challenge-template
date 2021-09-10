@@ -2,7 +2,6 @@ import { Task } from 'src/domain/task/entity/task'
 import { UserTaskStatus } from 'src/domain/user-task-status/entity/user-task-status'
 import { User } from 'src/domain/user/user'
 import { UserService } from 'src/domain/user/service/user-service'
-import { createRandomIdString } from 'src/util/random'
 import { ITaskStatusRepository } from '../task-status/repository-interface/task-status-repository'
 import { ITaskRepository } from '../task/repository-interface/task-repository'
 import { IUserRepository } from './repository-interface/user-repository'
@@ -25,17 +24,15 @@ export class CreateUserUsecase {
   }
   public async do(params: { name: string; mail: string }): Promise<void> {
     const { name, mail } = params
-    const userId = createRandomIdString()
-    const userEntity = new User({
-      id: userId,
-      name,
-      mail,
-    })
+    const userEntity = User.create({ name, mail })
     await this.userService.duplicateMailCheck(userEntity)
     await this.userRepo.save(userEntity)
 
     const tasks: Task[] = await this.taskRepo.findAll()
-    const taskStatusList = this.createTaskStatusList(tasks, userId)
+    const taskStatusList = this.createTaskStatusList(
+      tasks,
+      userEntity.id.toString(),
+    )
     await this.taskStatusRepo.saveAll(taskStatusList)
   }
 

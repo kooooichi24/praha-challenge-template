@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client'
 import { UserRepository } from 'src/infra/db/repository/user/user-repository'
 import { CreateUserUsecase } from '../create-user-usecase'
 import { User } from 'src/domain/user/user'
-import { createRandomIdString } from 'src/util/random'
 import { uuid as uuidv4 } from 'uuidv4'
 import { UserService } from 'src/domain/user/service/user-service'
 import { TaskRepository } from 'src/infra/db/repository/task/task-repository'
@@ -27,13 +26,10 @@ describe('create-user-usecase', () => {
   describe('do', () => {
     const mockUuidv4 = uuidv4 as jest.Mock
     const mockUuidv4Response = '3f86f7dd-d67f-4516-afba-8021d7696462'
-    let userRepoSpy: jest.SpyInstance<Promise<User>, [userEntity: User]>
-    let userServiceSpy: jest.SpyInstance<Promise<void>, [userEntity: User]>
-    let taskRepoSpy: jest.SpyInstance<Promise<Task[]>, []>
-    let taskStatusRepo: jest.SpyInstance<
-      Promise<void>,
-      [taskStatusList: UserTaskStatus[]]
-    >
+    let userRepoSpy: jest.SpyInstance
+    let userServiceSpy: jest.SpyInstance
+    let taskRepoSpy: jest.SpyInstance
+    let taskStatusRepo: jest.SpyInstance
 
     beforeEach(() => {
       mockUuidv4.mockImplementation(() => mockUuidv4Response)
@@ -44,7 +40,7 @@ describe('create-user-usecase', () => {
       jest.restoreAllMocks()
     })
 
-    it('[正常系]: 例外が発生しない', async () => {
+    test('[正常系]: 例外が発生しない', async () => {
       // Arrange
       const mockTasksResponse = [
         new Task({ id: '1', title: '', content: '' }),
@@ -55,16 +51,26 @@ describe('create-user-usecase', () => {
         .spyOn(TaskRepository.prototype, 'findAll')
         .mockResolvedValue(mockTasksResponse)
 
-      const userId = createRandomIdString()
-      const expectedUser = new User({
-        id: userId,
+      const expectedUser = User.create({
         name: 'name',
         mail: 'mail@gmail.com',
       })
       const expectedTaskStatusList = [
-        new UserTaskStatus({ userId, taskId: '1', status: 'TODO' }),
-        new UserTaskStatus({ userId, taskId: '2', status: 'TODO' }),
-        new UserTaskStatus({ userId, taskId: '3', status: 'TODO' }),
+        new UserTaskStatus({
+          userId: expectedUser.id.toString(),
+          taskId: '1',
+          status: 'TODO',
+        }),
+        new UserTaskStatus({
+          userId: expectedUser.id.toString(),
+          taskId: '2',
+          status: 'TODO',
+        }),
+        new UserTaskStatus({
+          userId: expectedUser.id.toString(),
+          taskId: '3',
+          status: 'TODO',
+        }),
       ]
 
       // Act
@@ -77,7 +83,7 @@ describe('create-user-usecase', () => {
       expect(taskRepoSpy).toHaveBeenCalledTimes(1)
     })
 
-    it('[異常系]: userRepo.saveで例外が発生した場合、例外が発生する', async () => {
+    test('[異常系]: userRepo.saveで例外が発生した場合、例外が発生する', async () => {
       // Arrange
       const ERROR_MESSAGE = 'error!'
       userRepoSpy = jest
@@ -97,7 +103,7 @@ describe('create-user-usecase', () => {
       expect(taskStatusRepo).toHaveBeenCalledTimes(0)
     })
 
-    it('[異常系]: メールアドレスが重複している場合、例外が発生する', async () => {
+    test('[異常系]: メールアドレスが重複している場合、例外が発生する', async () => {
       // Arrange
       const ERROR_MESSAGE = 'メールアドレスが重複しています!'
       userServiceSpy = jest

@@ -1,6 +1,6 @@
 // import { IDomainEvent } from '../../shared/events/IDomainEvent'
 // import { UniqueEntityID } from '../../shared/UniqueEntityID'
-// import { User } from '../entity/user'
+// import { User } from '../user'
 
 // export class StatusRecessed implements IDomainEvent {
 //   public dateTimeOccurred: Date

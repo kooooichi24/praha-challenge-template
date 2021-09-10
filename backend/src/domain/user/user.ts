@@ -36,4 +36,8 @@ export class User extends AggregateRoot<UserProps> {
       status: this.props.status,
     }
   }
+
+  get id(): UniqueEntityID {
+    return this._id
+  }
 }
