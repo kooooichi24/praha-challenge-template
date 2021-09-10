@@ -36,10 +36,8 @@ export class CreateTaskUseCase {
     const savedTask = await this.taskRepo.save(taskEntity)
 
     const users: User[] = await this.userRepo.findAll()
-    const userTasksStatusList: UserTaskStatus[] = this.convertUsersToTaskStatusList(
-      users,
-      taskId,
-    )
+    const userTasksStatusList: UserTaskStatus[] =
+      this.convertUsersToTaskStatusList(users, taskId)
 
     await this.taskStatusRepo.saveAll(userTasksStatusList)
 
@@ -52,7 +50,11 @@ export class CreateTaskUseCase {
   ): UserTaskStatus[] {
     return users.map((user) => {
       const { id } = user.getAllProperties()
-      return new UserTaskStatus({ userId: id, taskId, status: 'TODO' })
+      return new UserTaskStatus({
+        userId: id.toString(),
+        taskId,
+        status: 'TODO',
+      })
     })
   }
 }

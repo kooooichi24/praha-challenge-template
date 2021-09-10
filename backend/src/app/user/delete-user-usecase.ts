@@ -20,7 +20,7 @@ export class DeleteUserUseCase {
       throw Error('idに該当するユーザーが存在しません')
     }
     const userEntity = User.create(
-      { ...userDTO },
+      { name: userDTO.name, mail: userDTO.mail, status: userDTO.status },
       new UniqueEntityID(userDTO.id),
     )
     await this.userRepo.delete(userEntity)

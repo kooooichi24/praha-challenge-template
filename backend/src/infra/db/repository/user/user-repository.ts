@@ -18,7 +18,10 @@ export class UserRepository implements IUserRepository {
     })
 
     const usersEntity = usersData.map((user) => {
-      return User.create({ ...user }, new UniqueEntityID(user.id))
+      return User.create(
+        { name: user.name, mail: user.mail, status: user.status },
+        new UniqueEntityID(user.id),
+      )
     })
 
     return usersEntity
@@ -34,7 +37,10 @@ export class UserRepository implements IUserRepository {
       return undefined
     }
 
-    return User.create({ ...userData }, new UniqueEntityID(userData.id))
+    return User.create(
+      { name: userData.name, mail: userData.mail, status: userData.status },
+      new UniqueEntityID(userData.id),
+    )
   }
 
   public async save(userEntity: User): Promise<void> {
@@ -64,7 +70,11 @@ export class UserRepository implements IUserRepository {
     })
 
     const updatedUserEntity = User.create(
-      { ...updatedUserDataModel },
+      {
+        name: updatedUserDataModel.name,
+        mail: updatedUserDataModel.mail,
+        status: updatedUserDataModel.status,
+      },
       new UniqueEntityID(updatedUserDataModel.id),
     )
     return updatedUserEntity
