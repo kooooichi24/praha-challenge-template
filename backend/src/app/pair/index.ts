@@ -1,5 +1,5 @@
-import { AddUserUsecase } from './AddUserUsecase'
+import { RemoveUserUsecase } from './RemoveUserUsecase'
 
-const addUserUsecase = new AddUserUsecase()
+const removeUserUsecase = new RemoveUserUsecase()
 
-export { addUserUsecase }
+export { removeUserUsecase }

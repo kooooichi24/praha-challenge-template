@@ -8,9 +8,9 @@ export class AfterUserRecessedOrLeft
 {
   private removeUserUsecase: RemoveUserUsecase
 
-  constructor(addUserUsecase: RemoveUserUsecase) {
+  constructor(removeUserUsecase: RemoveUserUsecase) {
     this.setupSubscriptions()
-    this.removeUserUsecase = addUserUsecase
+    this.removeUserUsecase = removeUserUsecase
   }
 
   setupSubscriptions(): void {
