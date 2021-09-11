@@ -1,11 +1,13 @@
 import { AggregateRoot } from '../shared/AggregateRoot'
 import { UniqueEntityID } from '../shared/UniqueEntityID'
 import { UserRecessedOrLeftEvent } from './events/userRecessedOrLeftEvent'
+import { UserId } from './userId'
+import { EnrollmentStatus } from './enrollmentStatus'
 
 interface UserProps {
   name: string
   mail: string
-  status: 'ENROLLMENT' | 'RECESS' | 'LEFT'
+  status: EnrollmentStatus
 }
 
 export class User extends AggregateRoot<UserProps> {
@@ -17,7 +19,7 @@ export class User extends AggregateRoot<UserProps> {
     props: {
       name: string
       mail: string
-      status?: 'ENROLLMENT' | 'RECESS' | 'LEFT'
+      status?: EnrollmentStatus
     },
     id?: UniqueEntityID,
   ): User {
@@ -25,7 +27,7 @@ export class User extends AggregateRoot<UserProps> {
     return new User({ ...props, status }, id)
   }
 
-  public changeStatus(status: 'ENROLLMENT' | 'RECESS' | 'LEFT') {
+  public changeStatus(status: EnrollmentStatus) {
     if (status === 'RECESS' || status === 'LEFT') {
       this.addDomainEvent(new UserRecessedOrLeftEvent(this))
     }
@@ -41,7 +43,7 @@ export class User extends AggregateRoot<UserProps> {
     }
   }
 
-  get id(): UniqueEntityID {
-    return this._id
+  get userId(): UserId {
+    return UserId.create(this.id)
   }
 }
