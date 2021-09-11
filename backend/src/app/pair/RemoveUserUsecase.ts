@@ -9,7 +9,7 @@ export class RemoveUserUsecase implements UseCase<Request, Promise<void>> {
   constructor() {}
 
   public async do(req: Request): Promise<void> {
-    console.log('called AddUserUsecase.do()')
+    console.log('called RemoveUserUsecase.do()')
     // const pair = pairRepo.findByUserId(req.userId)
     // pair.removeUser(userId)
     // await this.pairRepo.save(pair)
