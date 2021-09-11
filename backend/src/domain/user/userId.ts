@@ -1,7 +1,7 @@
 import { Entity } from 'src/domain/shared/Entity'
 import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
 
-export class PairId extends Entity<any> {
+export class UserId extends Entity<any> {
   get id(): UniqueEntityID {
     return this._id
   }
@@ -10,7 +10,7 @@ export class PairId extends Entity<any> {
     super(null, id)
   }
 
-  public static create(id?: UniqueEntityID): PairId {
-    return new PairId(id)
+  public static create(id?: UniqueEntityID): UserId {
+    return new UserId(id)
   }
 }
