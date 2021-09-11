@@ -10,7 +10,7 @@ export class PairRepository implements IPairRepository {
     this.prismaClient = prismaClient
   }
 
-  findByUserId(userId: UserId): Promise<Pair> {
+  findByUserId(userId: UserId): Promise<Pair | undefined> {
     throw new Error('Method not implemented.')
   }
 

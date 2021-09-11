@@ -70,5 +70,29 @@ describe('RemoveBelongingUserUsecase', () => {
       expect(pairRepoSaveSpy).toHaveBeenCalledWith(expectedSaveArgs)
       expect(pairRepoSaveSpy).toHaveBeenCalledTimes(1)
     })
+
+    test('[異常系]: UserIdが所属しているペアが存在しない場合、例外が発生する', async () => {
+      // Arrange
+      const pairRepoFindByUserIdSpy = jest
+        .spyOn(PairRepository.prototype, 'findByUserId')
+        .mockResolvedValue(undefined)
+      const pairRepoSaveSpy = jest
+        .spyOn(PairRepository.prototype, 'save')
+        .mockImplementation()
+
+      // Act
+      const usecase = new RemoveBelongingUserUsecase(new PairRepository(prisma))
+      const req = {
+        userId: UserId.create(new UniqueEntityID('1')),
+      }
+      try {
+        await usecase.do(req)
+        fail('could not reach here.')
+      } catch (e: any) {
+        // Assert
+        expect(e.message).toBe('ユーザが所属しているペアが見つかりません')
+      }
+      expect(pairRepoSaveSpy).toHaveBeenCalledTimes(0)
+    })
   })
 })
