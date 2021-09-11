@@ -1,46 +1,49 @@
+import { AggregateRoot } from '../shared/AggregateRoot'
+import { UniqueEntityID } from '../shared/UniqueEntityID'
+import { UserId } from '../user/userId'
+import { BelongingUserIds } from './belongingUserIds'
 import { PairId } from './pairId'
+import { PairName } from './pairName'
 
-export class Pair {
-  private id: PairId
-  private name: string
-  private userIds: String[] // TODO userIds: UserId[] に修正したい
+interface PairProps {
+  name: PairName
+  belongingUserIds: BelongingUserIds
+}
 
-  private readonly MINIMUM_BELONGING_STUDENT_NUMBER = 2
-  private readonly MAXIMUM_BELONGING_STUDENT_NUMBER = 3
-
-  public constructor(props: { name: string }) {
-    const { name } = props
-
-    if (!name || name.length !== 1 || /^[a-zA-Z]+$/.test(name)) {
-      throw Error('ペア名は1文字の半角英字のみ可能です')
-    }
-
-    this.id = new PairId()
-    this.name = name
-    this.userIds = []
+export class Pair extends AggregateRoot<PairProps> {
+  private constructor(props: PairProps, id?: UniqueEntityID) {
+    super(props, id)
   }
 
-  public addUser(userId: string): void {
-    if (this.userIds.length === this.MAXIMUM_BELONGING_STUDENT_NUMBER) {
-      throw Error('ペアに所属している参加者が3名存在します')
-    }
-
-    this.userIds.push(userId)
+  public static create(props: PairProps, id?: UniqueEntityID): Pair {
+    return new Pair({ ...props }, id)
   }
 
-  public removeUser(userId: string): void {
-    if (this.userIds.length === this.MINIMUM_BELONGING_STUDENT_NUMBER) {
-      throw Error('ペアに所属している参加者が3名存在します')
-    }
+  public addUser(userId: UserId): void {
+    this.belongingUserIds.addUser(userId)
+  }
 
-    this.userIds.filter((id) => id != userId)
+  public removeUser(userId: UserId): void {
+    this.belongingUserIds.removeUser(userId)
   }
 
   public getAllProperties() {
     return {
       id: this.id,
       name: this.name,
-      userIds: this.userIds,
+      belongingUserIds: this.belongingUserIds,
     }
+  }
+
+  get pairId(): PairId {
+    return PairId.create(this.id)
+  }
+
+  get name(): PairName {
+    return this.props.name
+  }
+
+  get belongingUserIds(): BelongingUserIds {
+    return this.props.belongingUserIds
   }
 }

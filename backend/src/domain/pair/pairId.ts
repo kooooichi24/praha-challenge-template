@@ -1,13 +1,16 @@
-import { uuid } from 'uuidv4'
+import { Entity } from 'src/domain/shared/Entity'
+import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
 
-export class PairId {
-  private id: string
-
-  public constructor() {
-    this.id = uuid()
+export class PairId extends Entity<any> {
+  get id(): UniqueEntityID {
+    return this._id
   }
 
-  public stringValue(): string {
-    return this.id
+  private constructor(id?: UniqueEntityID) {
+    super(null, id)
+  }
+
+  public static create(id?: UniqueEntityID): PairId {
+    return new PairId(id)
   }
 }
