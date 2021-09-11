@@ -1,16 +1,16 @@
 import { IHandle } from 'src/domain/shared/events/IHandle'
 import { DomainEvents } from 'src/domain/shared/events/DomainEvents'
 import { UserRecessedOrLeftEvent } from 'src/domain/user/events/userRecessedOrLeftEvent'
-import { AddUserUsecase } from 'src/app/pair/AddUserUsecase'
+import { RemoveBelongingUserUsecase } from 'src/app/pair/RemoveBelongingUserUsecase'
 
 export class AfterUserRecessedOrLeft
   implements IHandle<UserRecessedOrLeftEvent>
 {
-  private addUserUsecase: AddUserUsecase
+  private RemoveBelongingUserUsecase: RemoveBelongingUserUsecase
 
-  constructor(addUserUsecase: AddUserUsecase) {
+  constructor(RemoveBelongingUserUsecase: RemoveBelongingUserUsecase) {
     this.setupSubscriptions()
-    this.addUserUsecase = addUserUsecase
+    this.RemoveBelongingUserUsecase = RemoveBelongingUserUsecase
   }
 
   setupSubscriptions(): void {
@@ -24,8 +24,9 @@ export class AfterUserRecessedOrLeft
   private async onUserRecessedOrLeftEvent(
     event: UserRecessedOrLeftEvent,
   ): Promise<void> {
+    const { user } = event
     try {
-      await this.addUserUsecase.do()
+      await this.RemoveBelongingUserUsecase.do({ userId: user.userId })
     } catch (e) {}
   }
 }

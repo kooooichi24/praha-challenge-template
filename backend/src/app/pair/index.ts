@@ -1,5 +1,9 @@
-import { AddUserUsecase } from './AddUserUsecase'
+import { RemoveBelongingUserUsecase } from './RemoveBelongingUserUsecase'
+import { PairRepository } from 'src/infra/db/repository/pair/pair-repository'
+import { PrismaClient } from '.prisma/client'
 
-const addUserUsecase = new AddUserUsecase()
+const removeBelongingUserUsecase = new RemoveBelongingUserUsecase(
+  new PairRepository(new PrismaClient()),
+)
 
-export { addUserUsecase }
+export { removeBelongingUserUsecase }

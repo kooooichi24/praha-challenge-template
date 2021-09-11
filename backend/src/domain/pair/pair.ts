@@ -1,13 +1,13 @@
 import { AggregateRoot } from '../shared/AggregateRoot'
 import { UniqueEntityID } from '../shared/UniqueEntityID'
 import { UserId } from '../user/userId'
-import { BelongingUserIds } from './belongingUserIds'
+import { BelongingUsers } from './belongingUserIds'
 import { PairId } from './pairId'
 import { PairName } from './pairName'
 
 interface PairProps {
   name: PairName
-  belongingUserIds: BelongingUserIds
+  belongingUsers: BelongingUsers
 }
 
 export class Pair extends AggregateRoot<PairProps> {
@@ -20,18 +20,18 @@ export class Pair extends AggregateRoot<PairProps> {
   }
 
   public addUser(userId: UserId): void {
-    this.belongingUserIds.addUser(userId)
+    this.belongingUsers.addUser(userId)
   }
 
   public removeUser(userId: UserId): void {
-    this.belongingUserIds.removeUser(userId)
+    this.belongingUsers.removeUser(userId)
   }
 
   public getAllProperties() {
     return {
       id: this.id,
       name: this.name,
-      belongingUserIds: this.belongingUserIds,
+      belongingUserIds: this.belongingUsers,
     }
   }
 
@@ -43,7 +43,7 @@ export class Pair extends AggregateRoot<PairProps> {
     return this.props.name
   }
 
-  get belongingUserIds(): BelongingUserIds {
-    return this.props.belongingUserIds
+  get belongingUsers(): BelongingUsers {
+    return this.props.belongingUsers
   }
 }

@@ -14,7 +14,7 @@ export class PairName extends ValueObject<PairNameProps> {
   }
 
   public static create(name: string): PairName {
-    if (!name || name.length !== 1 || /^[a-zA-Z]+$/.test(name)) {
+    if (!name || name.length !== 1 || !/^[a-zA-Z]+$/.test(name)) {
       throw Error('ペア名は1文字の半角英字のみ可能です')
     }
 
