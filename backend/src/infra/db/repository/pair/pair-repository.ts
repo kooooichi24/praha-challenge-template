@@ -20,6 +20,9 @@ export class PairRepository implements IPairRepository {
           userId: userId.id.toString(),
         },
       })
+    if (!userBelongingPair) {
+      return undefined
+    }
     // 本当は1クエリで取得したい
     const pair = await this.prismaClient.pairs.findFirst({
       include: {

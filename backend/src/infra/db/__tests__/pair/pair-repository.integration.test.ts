@@ -29,8 +29,7 @@ describe('pair-repository.integration.ts', () => {
   })
 
   describe('getByUserId', () => {
-    test('[正常系] ユーザが所属するペアを取得できること', async () => {
-      // Arrange
+    beforeEach(async () => {
       await prisma.users.createMany({
         data: [
           {
@@ -63,7 +62,10 @@ describe('pair-repository.integration.ts', () => {
           },
         ],
       })
+    })
 
+    test('[正常系] ユーザが所属するペアを取得できること', async () => {
+      // Arrange
       const expected = Pair.create(
         {
           name: PairName.create('a'),
@@ -85,25 +87,14 @@ describe('pair-repository.integration.ts', () => {
       expect(actual).toEqual(expected)
     })
 
-    // test('[正常系] mailに一致したユーザが存在しない場合、undefinedを返却すること', async () => {
-    //   // Arrange
-    //   const preData = User.create({
-    //     name: 'namae-san',
-    //     mail: 'not-match-mail@gmail.com',
-    //     status: 'ENROLLMENT',
-    //   })
-    //   await prisma.users.create({
-    //     data: {
-    //       ...preData.getAllProperties(),
-    //       id: preData.id.toString(),
-    //     },
-    //   })
+    test('[正常系] ユーザが所属していない場合、undefinedを返すこと', async () => {
+      // Arrange
+      // Act
+      const userIdArgs = UserId.create(new UniqueEntityID('999999'))
+      const actual = await pairRepository.findByUserId(userIdArgs)
 
-    //   // Act
-    //   const actual = await userRepository.getByMail('test@gmail.com')
-
-    //   // Assert
-    //   expect(actual).toEqual(undefined)
-    // })
+      // Assert
+      expect(actual).toEqual(undefined)
+    })
   })
 })
