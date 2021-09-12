@@ -21,17 +21,17 @@ export class PairRepository implements IPairRepository {
           userId: userId.id.toString(),
         },
       })
+
     if (!userBelongingPair) {
       return undefined
     }
     // 本当は1クエリで取得したい
     const pair = await this.prismaClient.pairs.findFirst({
+      where: {
+        id: userBelongingPair.pairId,
+      },
       include: {
-        UserBelongingPair: {
-          where: {
-            pairId: userBelongingPair?.pairId,
-          },
-        },
+        UserBelongingPair: true,
       },
     })
     if (!pair) {
@@ -41,6 +41,7 @@ export class PairRepository implements IPairRepository {
     const userIds = pair.UserBelongingPair.map((ubp: UserBelongingPair) => {
       return UserId.create(new UniqueEntityID(ubp.userId))
     })
+
     return Pair.create(
       {
         name: PairName.create(pair.name),

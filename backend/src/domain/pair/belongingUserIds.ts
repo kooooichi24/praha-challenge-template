@@ -34,7 +34,6 @@ export class BelongingUsers extends Entity<BelongingUsersProps> {
 
   public removeUser(argUserId: UserId): void {
     if (this.userIds.length === this.MINIMUM_BELONGING_NUMBER) {
-      // TODO pair分解
       throw Error('現在、ペアに参加者が2名所属しています')
     }
     this.userIds = this.userIds.filter((userId) => !userId.equals(argUserId))
