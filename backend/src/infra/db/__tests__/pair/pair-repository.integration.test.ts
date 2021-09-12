@@ -100,6 +100,71 @@ describe('pair-repository.integration.ts', () => {
     })
   })
 
+  describe('findByPairId', () => {
+    test('[正常系] ペアIDに一致するペアを取得できること', async () => {
+      // Arrange
+      await prisma.users.createMany({
+        data: [
+          {
+            id: '100',
+            name: 'test100',
+            mail: 'test100@example.com',
+          },
+          {
+            id: '101',
+            name: 'test101',
+            mail: 'test101@example.com',
+          },
+        ],
+      })
+      await prisma.pairs.create({
+        data: {
+          id: '200',
+          name: 'a',
+        },
+      })
+      await prisma.userBelongingPair.createMany({
+        data: [
+          {
+            userId: '100',
+            pairId: '200',
+          },
+          {
+            userId: '101',
+            pairId: '200',
+          },
+        ],
+      })
+
+      // Act
+      const actual = await pairRepository.findByPairId('200')
+
+      // Assert
+      expect(actual).toEqual(
+        Pair.create(
+          {
+            name: PairName.create('a'),
+            belongingUsers: BelongingUsers.create({
+              userIds: [
+                UserId.create(new UniqueEntityID('100')),
+                UserId.create(new UniqueEntityID('101')),
+              ],
+            }),
+          },
+          new UniqueEntityID('200'),
+        ),
+      )
+    })
+  })
+
+  describe('findOneMinimumPair', () => {
+    test('[正常系] 最も参加人数が少ないペアを1つ取得できること', async () => {
+      // Arrange
+      // Act
+      // Assert
+    })
+  })
+
   describe('save', () => {
     test('[正常系] pairとuserBelongingPairが保存されること', async () => {
       // Arrange
@@ -157,6 +222,14 @@ describe('pair-repository.integration.ts', () => {
       expect(actualPair[0]).toEqual(expectedPair)
       expect(actualUserBelongingPair).toHaveLength(2)
       expect(actualUserBelongingPair).toEqual(expectedUserBelongingPair)
+    })
+  })
+
+  describe('delete', () => {
+    test('[正常系] ペアを削除できること', async () => {
+      // Arrange
+      // Act
+      // Assert
     })
   })
 })

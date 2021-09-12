@@ -52,8 +52,34 @@ export class PairRepository implements IPairRepository {
     )
   }
 
-  findByPairId(pairId: string): Promise<Pair> {
-    throw new Error('Method not implemented.')
+  async findByPairId(pairId: string): Promise<Pair | null> {
+    const pair = await this.prismaClient.pairs.findUnique({
+      where: {
+        id: pairId,
+      },
+      include: {
+        UserBelongingPair: true,
+      },
+    })
+    if (!pair) {
+      return null
+    }
+
+    const userIds: UserId[] = pair.UserBelongingPair.map(
+      (ubp: UserBelongingPair) => {
+        return UserId.create(new UniqueEntityID(ubp.userId))
+      },
+    )
+
+    return Pair.create(
+      {
+        name: PairName.create(pair.name),
+        belongingUsers: BelongingUsers.create({
+          userIds,
+        }),
+      },
+      new UniqueEntityID(pair.id),
+    )
   }
 
   findOneMinimumPair(): Promise<Pair> {
