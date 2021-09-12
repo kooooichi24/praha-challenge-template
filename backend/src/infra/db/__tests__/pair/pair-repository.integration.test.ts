@@ -160,8 +160,112 @@ describe('pair-repository.integration.ts', () => {
   describe('findOneMinimumPair', () => {
     test('[正常系] 最も参加人数が少ないペアを1つ取得できること', async () => {
       // Arrange
+      await prisma.users.createMany({
+        data: [
+          {
+            id: '100',
+            name: 'test100',
+            mail: 'test100@example.com',
+          },
+          {
+            id: '101',
+            name: 'test101',
+            mail: 'test101@example.com',
+          },
+          {
+            id: '102',
+            name: 'test102',
+            mail: 'test102@example.com',
+          },
+          {
+            id: '103',
+            name: 'test103',
+            mail: 'test103@example.com',
+          },
+          {
+            id: '104',
+            name: 'test104',
+            mail: 'test104@example.com',
+          },
+          {
+            id: '105',
+            name: 'test105',
+            mail: 'test105@example.com',
+          },
+          {
+            id: '106',
+            name: 'test106',
+            mail: 'test106@example.com',
+          },
+        ],
+      })
+      await prisma.pairs.createMany({
+        data: [
+          {
+            id: '200',
+            name: 'a',
+          },
+          {
+            id: '201',
+            name: 'b',
+          },
+          {
+            id: '202',
+            name: 'c',
+          },
+        ],
+      })
+      await prisma.userBelongingPair.createMany({
+        data: [
+          {
+            userId: '100',
+            pairId: '200',
+          },
+          {
+            userId: '101',
+            pairId: '200',
+          },
+          {
+            userId: '102',
+            pairId: '200',
+          },
+          {
+            userId: '103',
+            pairId: '201',
+          },
+          {
+            userId: '104',
+            pairId: '201',
+          },
+          {
+            userId: '105',
+            pairId: '202',
+          },
+          {
+            userId: '106',
+            pairId: '202',
+          },
+        ],
+      })
+
       // Act
+      const actual = await pairRepository.findOneMinimumPair()
+
       // Assert
+      expect(actual).toEqual(
+        Pair.create(
+          {
+            name: PairName.create('b'),
+            belongingUsers: BelongingUsers.create({
+              userIds: [
+                UserId.create(new UniqueEntityID('103')),
+                UserId.create(new UniqueEntityID('104')),
+              ],
+            }),
+          },
+          new UniqueEntityID('201'),
+        ),
+      )
     })
   })
 
