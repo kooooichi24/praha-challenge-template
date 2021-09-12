@@ -1,9 +1,7 @@
-import { Prisma } from '.prisma/client'
 import { Pair } from 'src/domain/pair/pair'
 import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
 import { UserId } from 'src/domain/user/userId'
 import { UseCase } from '../shared/UseCase'
-import { MoveBelongingUserUsecase } from './MoveBelongingUserUsecase'
 import { IPairRepository } from './repository-interface/IPairRepository'
 
 interface Request {

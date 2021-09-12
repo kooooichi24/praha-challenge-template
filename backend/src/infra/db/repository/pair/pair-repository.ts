@@ -118,8 +118,6 @@ export class PairRepository implements IPairRepository {
     })
 
     await this.prismaClient.$transaction([task1, task2, task3, task4])
-    // 本当はORMのHooksに頼りたいが、Prismaにはサポートされていないため、prisma処理後に記述する
-    DomainEvents.dispatchEventsForAggregate(pair.id)
   }
 
   delete(pair: Pair): Promise<void> {
