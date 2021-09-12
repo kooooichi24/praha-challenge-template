@@ -16,8 +16,9 @@ describe('pair-repository.integration.ts', () => {
   const mockUuidv4Response = '3f86f7dd-d67f-4516-afba-8021d7696462'
   const pairRepository = new PairRepository(prisma)
 
-  beforeEach(() => {
+  beforeEach(async () => {
     mockUuidv4.mockImplementation(() => mockUuidv4Response)
+    await setBaseDb()
   })
 
   afterEach(async () => {
@@ -31,41 +32,6 @@ describe('pair-repository.integration.ts', () => {
   })
 
   describe('getByUserId', () => {
-    beforeEach(async () => {
-      await prisma.users.createMany({
-        data: [
-          {
-            id: '100',
-            name: 'test100',
-            mail: 'test100@example.com',
-          },
-          {
-            id: '101',
-            name: 'test101',
-            mail: 'test101@example.com',
-          },
-        ],
-      })
-      await prisma.pairs.create({
-        data: {
-          id: '200',
-          name: 'a',
-        },
-      })
-      await prisma.userBelongingPair.createMany({
-        data: [
-          {
-            userId: '100',
-            pairId: '200',
-          },
-          {
-            userId: '101',
-            pairId: '200',
-          },
-        ],
-      })
-    })
-
     test('[正常系] ユーザが所属するペアを取得できること', async () => {
       // Arrange
       const expected = Pair.create(
@@ -103,39 +69,6 @@ describe('pair-repository.integration.ts', () => {
   describe('findByPairId', () => {
     test('[正常系] ペアIDに一致するペアを取得できること', async () => {
       // Arrange
-      await prisma.users.createMany({
-        data: [
-          {
-            id: '100',
-            name: 'test100',
-            mail: 'test100@example.com',
-          },
-          {
-            id: '101',
-            name: 'test101',
-            mail: 'test101@example.com',
-          },
-        ],
-      })
-      await prisma.pairs.create({
-        data: {
-          id: '200',
-          name: 'a',
-        },
-      })
-      await prisma.userBelongingPair.createMany({
-        data: [
-          {
-            userId: '100',
-            pairId: '200',
-          },
-          {
-            userId: '101',
-            pairId: '200',
-          },
-        ],
-      })
-
       // Act
       const actual = await pairRepository.findByPairId('200')
 
@@ -162,16 +95,6 @@ describe('pair-repository.integration.ts', () => {
       // Arrange
       await prisma.users.createMany({
         data: [
-          {
-            id: '100',
-            name: 'test100',
-            mail: 'test100@example.com',
-          },
-          {
-            id: '101',
-            name: 'test101',
-            mail: 'test101@example.com',
-          },
           {
             id: '102',
             name: 'test102',
@@ -202,10 +125,6 @@ describe('pair-repository.integration.ts', () => {
       await prisma.pairs.createMany({
         data: [
           {
-            id: '200',
-            name: 'a',
-          },
-          {
             id: '201',
             name: 'b',
           },
@@ -217,14 +136,6 @@ describe('pair-repository.integration.ts', () => {
       })
       await prisma.userBelongingPair.createMany({
         data: [
-          {
-            userId: '100',
-            pairId: '200',
-          },
-          {
-            userId: '101',
-            pairId: '200',
-          },
           {
             userId: '102',
             pairId: '200',
@@ -270,6 +181,12 @@ describe('pair-repository.integration.ts', () => {
   })
 
   describe('save', () => {
+    beforeEach(async () => {
+      await prisma.users.deleteMany({})
+      await prisma.pairs.deleteMany({})
+      await prisma.userBelongingPair.deleteMany({})
+    })
+
     test('[正常系] pairとuserBelongingPairが保存されること', async () => {
       // Arrange
       await prisma.users.createMany({
@@ -332,39 +249,6 @@ describe('pair-repository.integration.ts', () => {
   describe('delete', () => {
     test('[正常系] ペアを削除できること', async () => {
       // Arrange
-      await prisma.users.createMany({
-        data: [
-          {
-            id: '100',
-            name: 'test100',
-            mail: 'test100@example.com',
-          },
-          {
-            id: '101',
-            name: 'test101',
-            mail: 'test101@example.com',
-          },
-        ],
-      })
-      await prisma.pairs.create({
-        data: {
-          id: '200',
-          name: 'a',
-        },
-      })
-      await prisma.userBelongingPair.createMany({
-        data: [
-          {
-            userId: '100',
-            pairId: '200',
-          },
-          {
-            userId: '101',
-            pairId: '200',
-          },
-        ],
-      })
-
       // Act
       const pairArgs = Pair.create(
         {
@@ -390,3 +274,38 @@ describe('pair-repository.integration.ts', () => {
     })
   })
 })
+
+async function setBaseDb(): Promise<void> {
+  await prisma.users.createMany({
+    data: [
+      {
+        id: '100',
+        name: 'test100',
+        mail: 'test100@example.com',
+      },
+      {
+        id: '101',
+        name: 'test101',
+        mail: 'test101@example.com',
+      },
+    ],
+  })
+  await prisma.pairs.create({
+    data: {
+      id: '200',
+      name: 'a',
+    },
+  })
+  await prisma.userBelongingPair.createMany({
+    data: [
+      {
+        userId: '100',
+        pairId: '200',
+      },
+      {
+        userId: '101',
+        pairId: '200',
+      },
+    ],
+  })
+}
