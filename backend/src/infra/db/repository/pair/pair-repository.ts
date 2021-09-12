@@ -52,7 +52,18 @@ export class PairRepository implements IPairRepository {
   }
 
   async save(pair: Pair): Promise<void> {
-    const task1 = this.prismaClient.pairs.create({
+    const task1 = this.prismaClient.pairs.deleteMany({
+      where: {
+        id: pair.id.toString(),
+      },
+    })
+    const task2 = this.prismaClient.userBelongingPair.deleteMany({
+      where: {
+        pairId: pair.id.toString(),
+      },
+    })
+
+    const task3 = this.prismaClient.pairs.create({
       data: {
         id: pair.id.toString(),
         name: pair.name.value,
@@ -67,10 +78,10 @@ export class PairRepository implements IPairRepository {
         }
       },
     )
-    const task2 = this.prismaClient.userBelongingPair.createMany({
+    const task4 = this.prismaClient.userBelongingPair.createMany({
       data: datas,
     })
 
-    await this.prismaClient.$transaction([task1, task2])
+    await this.prismaClient.$transaction([task1, task2, task3, task4])
   }
 }
