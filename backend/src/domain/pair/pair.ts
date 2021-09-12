@@ -2,7 +2,6 @@ import { AggregateRoot } from '../shared/AggregateRoot'
 import { UniqueEntityID } from '../shared/UniqueEntityID'
 import { UserId } from '../user/userId'
 import { BelongingUsers } from './belongingUserIds'
-import { BelongingUserRemovedEvent } from './events/belongingUserRemovedEvent'
 import { PairId } from './pairId'
 import { PairName } from './pairName'
 
