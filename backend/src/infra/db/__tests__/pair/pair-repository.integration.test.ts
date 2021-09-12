@@ -6,6 +6,8 @@ import { Pair } from 'src/domain/pair/pair'
 import { PairName } from 'src/domain/pair/pairName'
 import { BelongingUsers } from 'src/domain/pair/belongingUserIds'
 import { uuid as uuidv4 } from 'uuidv4'
+import { Pairs } from '.prisma/client'
+import { UserBelongingPair } from '@prisma/client'
 
 jest.mock('uuidv4')
 
@@ -95,6 +97,66 @@ describe('pair-repository.integration.ts', () => {
 
       // Assert
       expect(actual).toEqual(undefined)
+    })
+  })
+
+  describe('save', () => {
+    test('[正常系] pairとuserBelongingPairが保存されること', async () => {
+      // Arrange
+      await prisma.users.createMany({
+        data: [
+          {
+            id: '100',
+            name: 'test100',
+            mail: 'test100@example.com',
+          },
+          {
+            id: '101',
+            name: 'test101',
+            mail: 'test101@example.com',
+          },
+        ],
+      })
+
+      const expectedPair: Pairs = {
+        id: '200',
+        name: 'a',
+      }
+      const expectedUserBelongingPair: UserBelongingPair[] = [
+        {
+          pairId: '200',
+          userId: '100',
+        },
+        {
+          pairId: '200',
+          userId: '101',
+        },
+      ]
+
+      // Act
+      const pairArgs = Pair.create(
+        {
+          name: PairName.create('a'),
+          belongingUsers: BelongingUsers.create({
+            userIds: [
+              UserId.create(new UniqueEntityID('100')),
+              UserId.create(new UniqueEntityID('101')),
+            ],
+          }),
+        },
+        new UniqueEntityID('200'),
+      )
+      await pairRepository.save(pairArgs)
+      const actualPair = await prisma.pairs.findMany({})
+      const actualUserBelongingPair = await prisma.userBelongingPair.findMany(
+        {},
+      )
+
+      // Assert
+      expect(actualPair).toHaveLength(1)
+      expect(actualPair[0]).toEqual(expectedPair)
+      expect(actualUserBelongingPair).toHaveLength(2)
+      expect(actualUserBelongingPair).toEqual(expectedUserBelongingPair)
     })
   })
 })

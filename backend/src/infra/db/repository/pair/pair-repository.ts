@@ -51,7 +51,26 @@ export class PairRepository implements IPairRepository {
     )
   }
 
-  save(pair: Pair): Promise<void> {
-    throw new Error('Method not implemented.')
+  async save(pair: Pair): Promise<void> {
+    const task1 = this.prismaClient.pairs.create({
+      data: {
+        id: pair.id.toString(),
+        name: pair.name.value,
+      },
+    })
+
+    const datas: UserBelongingPair[] = pair.belongingUsers.userIds.map(
+      (userId: UserId) => {
+        return {
+          pairId: pair.pairId.id.toString(),
+          userId: userId.id.toString(),
+        }
+      },
+    )
+    const task2 = this.prismaClient.userBelongingPair.createMany({
+      data: datas,
+    })
+
+    await this.prismaClient.$transaction([task1, task2])
   }
 }
