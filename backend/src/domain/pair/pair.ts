@@ -28,10 +28,6 @@ export class Pair extends AggregateRoot<PairProps> {
 
   public removeUser(userId: UserId): void {
     this.belongingUsers.removeUser(userId)
-
-    if (this.belongingUsers.userIds.length < this.MINIMUM_BELONGING_NUMBER) {
-      this.addDomainEvent(new BelongingUserRemovedEvent(this))
-    }
   }
 
   public getAllProperties() {

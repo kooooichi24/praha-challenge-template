@@ -7,7 +7,8 @@ interface BelongingUsersProps {
 }
 
 export class BelongingUsers extends Entity<BelongingUsersProps> {
-  private readonly MAXIMUM_BELONGING_STUDENT_NUMBER = 3
+  private readonly MINIMUM_BELONGING_NUMBER = 2
+  private readonly MAXIMUM_BELONGING_NUMBER = 3
 
   private constructor(props: BelongingUsersProps, id?: UniqueEntityID) {
     super(props, id)
@@ -24,7 +25,7 @@ export class BelongingUsers extends Entity<BelongingUsersProps> {
   }
 
   public addUser(userId: UserId): void {
-    if (this.userIds.length === this.MAXIMUM_BELONGING_STUDENT_NUMBER) {
+    if (this.userIds.length === this.MAXIMUM_BELONGING_NUMBER) {
       // TODO pair分解
       throw Error('現在、ペアに参加者が3名所属しています')
     }
@@ -32,6 +33,10 @@ export class BelongingUsers extends Entity<BelongingUsersProps> {
   }
 
   public removeUser(argUserId: UserId): void {
+    if (this.userIds.length === this.MINIMUM_BELONGING_NUMBER) {
+      // TODO pair分解
+      throw Error('現在、ペアに参加者が2名所属しています')
+    }
     this.userIds = this.userIds.filter((userId) => !userId.equals(argUserId))
   }
 
