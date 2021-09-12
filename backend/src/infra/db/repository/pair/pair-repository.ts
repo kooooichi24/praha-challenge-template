@@ -3,6 +3,7 @@ import { IPairRepository } from 'src/app/pair/repository-interface/IPairReposito
 import { BelongingUsers } from 'src/domain/pair/belongingUserIds'
 import { Pair } from 'src/domain/pair/pair'
 import { PairName } from 'src/domain/pair/pairName'
+import { DomainEvents } from 'src/domain/shared/events/DomainEvents'
 import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
 import { UserId } from 'src/domain/user/userId'
 
@@ -51,6 +52,14 @@ export class PairRepository implements IPairRepository {
     )
   }
 
+  findByPairId(pairId: string): Promise<Pair> {
+    throw new Error('Method not implemented.')
+  }
+
+  findOneMinimumPair(): Promise<Pair> {
+    throw new Error('Method not implemented.')
+  }
+
   async save(pair: Pair): Promise<void> {
     const task1 = this.prismaClient.pairs.deleteMany({
       where: {
@@ -83,5 +92,11 @@ export class PairRepository implements IPairRepository {
     })
 
     await this.prismaClient.$transaction([task1, task2, task3, task4])
+    // 本当はORMのHooksに頼りたいが、Prismaにはサポートされていないため、prisma処理後に記述する
+    DomainEvents.dispatchEventsForAggregate(pair.id)
+  }
+
+  delete(pair: Pair): Promise<void> {
+    throw new Error('Method not implemented.')
   }
 }

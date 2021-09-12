@@ -2,6 +2,7 @@ import { AggregateRoot } from '../shared/AggregateRoot'
 import { UniqueEntityID } from '../shared/UniqueEntityID'
 import { UserId } from '../user/userId'
 import { BelongingUsers } from './belongingUserIds'
+import { BelongingUserRemovedEvent } from './events/belongingUserRemovedEvent'
 import { PairId } from './pairId'
 import { PairName } from './pairName'
 
@@ -11,6 +12,8 @@ interface PairProps {
 }
 
 export class Pair extends AggregateRoot<PairProps> {
+  private readonly MINIMUM_BELONGING_NUMBER = 2
+
   private constructor(props: PairProps, id?: UniqueEntityID) {
     super(props, id)
   }
@@ -25,6 +28,10 @@ export class Pair extends AggregateRoot<PairProps> {
 
   public removeUser(userId: UserId): void {
     this.belongingUsers.removeUser(userId)
+
+    if (this.belongingUsers.userIds.length < this.MINIMUM_BELONGING_NUMBER) {
+      this.addDomainEvent(new BelongingUserRemovedEvent(this))
+    }
   }
 
   public getAllProperties() {

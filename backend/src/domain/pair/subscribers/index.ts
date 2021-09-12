@@ -1,5 +1,10 @@
 import { AfterUserRecessedOrLeft } from './AfterUserRecessedOrLeft'
-import { removeBelongingUserUsecase } from 'src/app/pair'
+import {
+  moveBelongingUserUsecase,
+  removeBelongingUserUsecase,
+} from 'src/app/pair'
+import { AfterBelongingUserRemoved } from './afterBelongingUserRemoved'
 
 // Subscribers
 new AfterUserRecessedOrLeft(removeBelongingUserUsecase)
+new AfterBelongingUserRemoved(moveBelongingUserUsecase)

@@ -16,6 +16,8 @@ export class RemoveBelongingUserUsecase
   }
 
   public async do(req: Request): Promise<void> {
+    console.log('called RemoveBelongingUserUsecase.do()')
+
     const pair = await this.pairRepo.findByUserId(req.userId)
     if (!pair) {
       throw Error('ユーザが所属しているペアが見つかりません')
