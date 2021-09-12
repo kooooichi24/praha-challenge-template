@@ -332,8 +332,61 @@ describe('pair-repository.integration.ts', () => {
   describe('delete', () => {
     test('[正常系] ペアを削除できること', async () => {
       // Arrange
+      await prisma.users.createMany({
+        data: [
+          {
+            id: '100',
+            name: 'test100',
+            mail: 'test100@example.com',
+          },
+          {
+            id: '101',
+            name: 'test101',
+            mail: 'test101@example.com',
+          },
+        ],
+      })
+      await prisma.pairs.create({
+        data: {
+          id: '200',
+          name: 'a',
+        },
+      })
+      await prisma.userBelongingPair.createMany({
+        data: [
+          {
+            userId: '100',
+            pairId: '200',
+          },
+          {
+            userId: '101',
+            pairId: '200',
+          },
+        ],
+      })
+
       // Act
+      const pairArgs = Pair.create(
+        {
+          name: PairName.create('a'),
+          belongingUsers: BelongingUsers.create({
+            userIds: [
+              UserId.create(new UniqueEntityID('100')),
+              UserId.create(new UniqueEntityID('101')),
+            ],
+          }),
+        },
+        new UniqueEntityID('200'),
+      )
+      await pairRepository.delete(pairArgs)
+      const actualPair = await prisma.pairs.findMany({})
+      const actualUserBelongingPair = await prisma.userBelongingPair.findMany(
+        {},
+      )
+
       // Assert
+      expect(actualPair).toStrictEqual([])
+      expect(actualUserBelongingPair).toStrictEqual([])
     })
   })
 })

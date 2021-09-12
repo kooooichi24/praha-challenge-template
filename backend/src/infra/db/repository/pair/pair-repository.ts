@@ -160,7 +160,18 @@ export class PairRepository implements IPairRepository {
     await this.prismaClient.$transaction([task1, task2, task3, task4])
   }
 
-  delete(pair: Pair): Promise<void> {
-    throw new Error('Method not implemented.')
+  async delete(pair: Pair): Promise<void> {
+    const task1 = this.prismaClient.pairs.deleteMany({
+      where: {
+        id: pair.id.toString(),
+      },
+    })
+    const task2 = this.prismaClient.userBelongingPair.deleteMany({
+      where: {
+        pairId: pair.id.toString(),
+      },
+    })
+
+    await this.prismaClient.$transaction([task1, task2])
   }
 }
