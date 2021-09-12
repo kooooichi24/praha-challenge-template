@@ -3,6 +3,7 @@ import { IPairRepository } from 'src/app/pair/repository-interface/IPairReposito
 import { BelongingUsers } from 'src/domain/pair/belongingUserIds'
 import { Pair } from 'src/domain/pair/pair'
 import { PairName } from 'src/domain/pair/pairName'
+import { DomainEvents } from 'src/domain/shared/events/DomainEvents'
 import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
 import { UserId } from 'src/domain/user/userId'
 
@@ -20,17 +21,17 @@ export class PairRepository implements IPairRepository {
           userId: userId.id.toString(),
         },
       })
+
     if (!userBelongingPair) {
       return undefined
     }
     // 本当は1クエリで取得したい
     const pair = await this.prismaClient.pairs.findFirst({
+      where: {
+        id: userBelongingPair.pairId,
+      },
       include: {
-        UserBelongingPair: {
-          where: {
-            pairId: userBelongingPair?.pairId,
-          },
-        },
+        UserBelongingPair: true,
       },
     })
     if (!pair) {
@@ -40,6 +41,81 @@ export class PairRepository implements IPairRepository {
     const userIds = pair.UserBelongingPair.map((ubp: UserBelongingPair) => {
       return UserId.create(new UniqueEntityID(ubp.userId))
     })
+
+    return Pair.create(
+      {
+        name: PairName.create(pair.name),
+        belongingUsers: BelongingUsers.create({
+          userIds,
+        }),
+      },
+      new UniqueEntityID(pair.id),
+    )
+  }
+
+  async findByPairId(pairId: string): Promise<Pair | null> {
+    const pair = await this.prismaClient.pairs.findUnique({
+      where: {
+        id: pairId,
+      },
+      include: {
+        UserBelongingPair: true,
+      },
+    })
+    if (!pair) {
+      return null
+    }
+
+    const userIds: UserId[] = pair.UserBelongingPair.map(
+      (ubp: UserBelongingPair) => {
+        return UserId.create(new UniqueEntityID(ubp.userId))
+      },
+    )
+
+    return Pair.create(
+      {
+        name: PairName.create(pair.name),
+        belongingUsers: BelongingUsers.create({
+          userIds,
+        }),
+      },
+      new UniqueEntityID(pair.id),
+    )
+  }
+
+  async findOneMinimumPair(): Promise<Pair | null> {
+    const pairId = await this.prismaClient.userBelongingPair.groupBy({
+      by: ['pairId'],
+      orderBy: {
+        pairId: 'asc',
+      },
+      having: {
+        pairId: {
+          _count: {
+            lte: 2,
+          },
+        },
+      },
+      take: 1,
+    })
+
+    const pair = await this.prismaClient.pairs.findFirst({
+      where: {
+        id: pairId[0]?.pairId,
+      },
+      include: {
+        UserBelongingPair: true,
+      },
+    })
+    if (!pair) {
+      return null
+    }
+
+    const userIds: UserId[] = pair.UserBelongingPair.map(
+      (ubp: UserBelongingPair) => {
+        return UserId.create(new UniqueEntityID(ubp.userId))
+      },
+    )
     return Pair.create(
       {
         name: PairName.create(pair.name),
@@ -83,5 +159,20 @@ export class PairRepository implements IPairRepository {
     })
 
     await this.prismaClient.$transaction([task1, task2, task3, task4])
+  }
+
+  async delete(pair: Pair): Promise<void> {
+    const task1 = this.prismaClient.pairs.deleteMany({
+      where: {
+        id: pair.id.toString(),
+      },
+    })
+    const task2 = this.prismaClient.userBelongingPair.deleteMany({
+      where: {
+        pairId: pair.id.toString(),
+      },
+    })
+
+    await this.prismaClient.$transaction([task1, task2])
   }
 }

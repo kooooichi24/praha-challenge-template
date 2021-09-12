@@ -11,6 +11,8 @@ interface PairProps {
 }
 
 export class Pair extends AggregateRoot<PairProps> {
+  private readonly MINIMUM_BELONGING_NUMBER = 2
+
   private constructor(props: PairProps, id?: UniqueEntityID) {
     super(props, id)
   }

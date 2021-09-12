@@ -94,5 +94,75 @@ describe('RemoveBelongingUserUsecase', () => {
       }
       expect(pairRepoSaveSpy).toHaveBeenCalledTimes(0)
     })
+
+    test('[正常系]: ユーザ数が2のときに削除する場合、最も参加人数が少ないペアにユーザを移動させ、現在のペアは削除されること', async () => {
+      // Arrange
+      const pairResponse = Pair.create({
+        name: PairName.create('a'),
+        belongingUsers: BelongingUsers.create({
+          userIds: [
+            UserId.create(new UniqueEntityID('1')),
+            UserId.create(new UniqueEntityID('2')),
+          ],
+        }),
+      })
+      const findByUserIdSpy = jest
+        .spyOn(PairRepository.prototype, 'findByUserId')
+        .mockResolvedValue(pairResponse)
+      const minimumPair = Pair.create({
+        name: PairName.create('b'),
+        belongingUsers: BelongingUsers.create({
+          userIds: [
+            UserId.create(new UniqueEntityID('3')),
+            UserId.create(new UniqueEntityID('4')),
+          ],
+        }),
+      })
+      const findOneMinimumPair = jest
+        .spyOn(PairRepository.prototype, 'findOneMinimumPair')
+        .mockResolvedValue(minimumPair)
+      const saveSpy = jest
+        .spyOn(PairRepository.prototype, 'save')
+        .mockImplementation()
+      const deleteSpy = jest
+        .spyOn(PairRepository.prototype, 'delete')
+        .mockImplementation()
+
+      // Act
+      const usecase = new RemoveBelongingUserUsecase(new PairRepository(prisma))
+      const req = {
+        userId: UserId.create(new UniqueEntityID('1')),
+      }
+      await usecase.do(req)
+
+      // Assert
+      expect(findByUserIdSpy).toHaveBeenCalledWith(
+        UserId.create(new UniqueEntityID('1')),
+      )
+      expect(findOneMinimumPair).toHaveBeenCalledTimes(1)
+      expect(saveSpy).toHaveBeenCalledWith(
+        Pair.create({
+          name: PairName.create('b'),
+          belongingUsers: BelongingUsers.create({
+            userIds: [
+              UserId.create(new UniqueEntityID('3')),
+              UserId.create(new UniqueEntityID('4')),
+              UserId.create(new UniqueEntityID('2')),
+            ],
+          }),
+        }),
+      )
+      expect(deleteSpy).toHaveBeenCalledWith(
+        Pair.create({
+          name: PairName.create('a'),
+          belongingUsers: BelongingUsers.create({
+            userIds: [
+              UserId.create(new UniqueEntityID('1')),
+              UserId.create(new UniqueEntityID('2')),
+            ],
+          }),
+        }),
+      )
+    })
   })
 })
