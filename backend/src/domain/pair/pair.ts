@@ -1,7 +1,7 @@
 import { AggregateRoot } from '../shared/AggregateRoot'
 import { UniqueEntityID } from '../shared/UniqueEntityID'
 import { UserId } from '../user/userId'
-import { BelongingUsers } from './belongingUserIds'
+import { BelongingUsers } from './belongingUsers'
 import { PairId } from './pairId'
 import { PairName } from './pairName'
 

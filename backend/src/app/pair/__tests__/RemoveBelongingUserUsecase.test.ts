@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { BelongingUsers } from 'src/domain/pair/belongingUserIds'
+import { BelongingUsers } from 'src/domain/pair/belongingUsers'
 import { Pair } from 'src/domain/pair/pair'
 import { PairName } from 'src/domain/pair/pairName'
 import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'

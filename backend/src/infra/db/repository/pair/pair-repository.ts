@@ -1,6 +1,6 @@
 import { PrismaClient, UserBelongingPair } from '@prisma/client'
 import { IPairRepository } from 'src/app/pair/repository-interface/IPairRepository'
-import { BelongingUsers } from 'src/domain/pair/belongingUserIds'
+import { BelongingUsers } from 'src/domain/pair/belongingUsers'
 import { Pair } from 'src/domain/pair/pair'
 import { PairName } from 'src/domain/pair/pairName'
 import { DomainEvents } from 'src/domain/shared/events/DomainEvents'
