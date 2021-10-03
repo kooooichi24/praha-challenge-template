@@ -3,6 +3,7 @@ import { UniqueEntityID } from '../shared/UniqueEntityID'
 import { UserRecessedOrLeftEvent } from './events/userRecessedOrLeftEvent'
 import { UserId } from './userId'
 import { EnrollmentStatus } from './enrollmentStatus'
+import { UserReturnedEvent } from './events/UserReturnedEvent'
 
 interface UserProps {
   name: string
@@ -30,6 +31,8 @@ export class User extends AggregateRoot<UserProps> {
   public changeStatus(status: EnrollmentStatus) {
     if (status === 'RECESS' || status === 'LEFT') {
       this.addDomainEvent(new UserRecessedOrLeftEvent(this))
+    } else {
+      this.addDomainEvent(new UserReturnedEvent(this))
     }
     this.props.status = status
   }
