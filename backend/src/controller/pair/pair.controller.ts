@@ -6,7 +6,7 @@ import { PairQS } from 'src/infra/db/query-service/pair/pair-qs'
 import { GetAllPairsResponse } from './response/get-all-pairs-response'
 
 @Controller({
-  path: '/pairs',
+  path: '/api/pairs',
 })
 export class PairController {
   // memo: @ApiResponseを定義しておかないとSwaggerに出力されない
