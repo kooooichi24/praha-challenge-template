@@ -27,13 +27,12 @@ export class AddBelongingUserUsecase
       throw Error('ペアを取得できませんでした')
     }
 
-    try {
-      pair.addUser(req.userId)
-    } catch (e) {
+    if (pair.isMax()) {
       await this.splitPair(pair, req.userId)
       return
     }
 
+    pair.addUser(req.userId)
     await this.pairRepo.save(pair)
   }
 
