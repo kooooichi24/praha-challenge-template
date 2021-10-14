@@ -26,6 +26,7 @@ export class AddBelongingUserUsecase
     if (!pair) {
       throw Error('ペアを取得できませんでした')
     }
+
     try {
       pair.addUser(req.userId)
     } catch (e) {
@@ -39,8 +40,8 @@ export class AddBelongingUserUsecase
   private async splitPair(pair: Pair, targetUserId: UserId): Promise<void> {
     const threeUserIds = pair.belongingUsers.userIds
 
-    const first = threeUserIds.slice(0, 2)
-    const second = threeUserIds.slice(2)
+    const first = threeUserIds.slice(0, BelongingUsers.MINIMUM_BELONGING_NUMBER)
+    const second = threeUserIds.slice(BelongingUsers.MINIMUM_BELONGING_NUMBER)
     second.push(targetUserId)
 
     const firstPair = Pair.create({

@@ -11,8 +11,6 @@ interface PairProps {
 }
 
 export class Pair extends AggregateRoot<PairProps> {
-  private readonly MINIMUM_BELONGING_NUMBER = 2
-
   private constructor(props: PairProps, id?: UniqueEntityID) {
     super(props, id)
   }
@@ -27,6 +25,14 @@ export class Pair extends AggregateRoot<PairProps> {
 
   public removeUser(userId: UserId): void {
     this.belongingUsers.removeUser(userId)
+  }
+
+  public isMax(): boolean {
+    return this.belongingUsers.isMax()
+  }
+
+  public isMin(): boolean {
+    return this.belongingUsers.isMin()
   }
 
   public getAllProperties() {
