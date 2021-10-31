@@ -51,6 +51,7 @@ model Pairs {
   id                String              @id @default(uuid())
   name              String              @db.Char(1)
   UserBelongingPair UserBelongingPair[]
+  PairBelongingTeam PairBelongingTeam[]
 }
 
 model UserBelongingPair {
@@ -60,4 +61,19 @@ model UserBelongingPair {
   Pair   Pairs  @relation(fields: [pairId], references: [id], onDelete: Cascade)
 
   @@id([userId, pairId])
+}
+
+model Teams {
+  id                String              @id @default(uuid())
+  name              String              @db.Char(3)
+  PairBelongingTeam PairBelongingTeam[]
+}
+
+model PairBelongingTeam {
+  pairId String
+  teamId String
+  Pair   Pairs  @relation(fields: [pairId], references: [id], onDelete: Cascade)
+  Team   Teams  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([pairId, teamId])
 }
