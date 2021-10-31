@@ -25,23 +25,26 @@ export class RemoveBelongingUserUsecase
       throw Error('ユーザが所属しているペアが見つかりません')
     }
 
-    try {
-      pair.removeUser(req.userId)
-    } catch (e) {
-      const targetPair = await this.pairRepo.findOneMinimumPair()
-      if (!targetPair) {
-        throw Error('ペアを取得できませんでした')
-      }
-
-      const lastUserId = this.getLastUserId(pair, req.userId)
-      targetPair.addUser(lastUserId)
-
-      await this.pairRepo.save(targetPair)
-      await this.pairRepo.delete(pair)
+    if (pair.isMin()) {
+      await this.moveAndRemove(pair, req.userId)
       return
     }
 
+    pair.removeUser(req.userId)
     await this.pairRepo.save(pair)
+  }
+
+  private async moveAndRemove(pair: Pair, userId: UserId) {
+    const targetPair = await this.pairRepo.findOneMinimumPair()
+    if (!targetPair) {
+      throw Error('ペアを取得できませんでした')
+    }
+
+    const lastUserId = this.getLastUserId(pair, userId)
+    targetPair.addUser(lastUserId)
+
+    await this.pairRepo.save(targetPair)
+    await this.pairRepo.delete(pair)
   }
 
   private getLastUserId(pair: Pair, userId: UserId): UserId {
