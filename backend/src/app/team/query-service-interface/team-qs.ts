@@ -13,12 +13,12 @@ type Pair = {
 
 export class TeamDTO {
   public readonly id: string
-  public readonly name: string
+  public readonly name: number
   public readonly belongingPairs: Pair[]
 
   public constructor(props: {
     id: string
-    name: string
+    name: number
     belongingPairs: Pair[]
   }) {
     const { id, name, belongingPairs } = props

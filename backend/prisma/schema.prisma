@@ -65,7 +65,7 @@ model UserBelongingPair {
 
 model Teams {
   id                String              @id @default(uuid())
-  name              String              @db.Char(3)
+  name              Int
   PairBelongingTeam PairBelongingTeam[]
 }
 
