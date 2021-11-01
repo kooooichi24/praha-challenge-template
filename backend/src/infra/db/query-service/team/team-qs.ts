@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { PairDTO } from 'src/app/pair/query-service-interface/pair-qs'
 import { ITeamQS, TeamDTO } from 'src/app/team/query-service-interface/team-qs'
 
 export class TeamQS implements ITeamQS {

@@ -1,5 +1,4 @@
 import { prisma } from '@testUtil/prisma'
-import { PairDTO } from 'src/app/pair/query-service-interface/pair-qs'
 import { TeamDTO } from 'src/app/team/query-service-interface/team-qs'
 import { TeamQS } from '../../query-service/team/team-qs'
 
