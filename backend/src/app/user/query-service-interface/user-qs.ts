@@ -1,7 +1,7 @@
 import { UserTaskStatus } from '@prisma/client'
 import { Page, PagingCondition } from 'src/app/shared/Paging'
 
-export class UserDTO {
+export class UserWithTasksStatusDTO {
   public readonly id: string
   public readonly name: string
   public readonly mail: string
@@ -23,9 +23,28 @@ export class UserDTO {
   }
 }
 
+export class UserDTO {
+  public readonly id: string
+  public readonly name: string
+  public readonly mail: string
+  public readonly status: 'ENROLLMENT' | 'RECESS' | 'LEFT'
+  public constructor(props: {
+    id: string
+    name: string
+    mail: string
+    status: 'ENROLLMENT' | 'RECESS' | 'LEFT'
+  }) {
+    const { id, name, mail, status } = props
+    this.id = id
+    this.name = name
+    this.mail = mail
+    this.status = status
+  }
+}
+
 export interface IUserQS {
-  findAll(): Promise<UserDTO[]>
-  findById(id: string): Promise<UserDTO | undefined>
+  findAll(): Promise<UserWithTasksStatusDTO[]>
+  findById(id: string): Promise<UserWithTasksStatusDTO | undefined>
   fetchPageByTaskAndStatus(
     taskIds: string[],
     taskStatus: 'TODO' | 'REVIEWING' | 'DONE',

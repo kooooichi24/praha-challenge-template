@@ -1,6 +1,9 @@
 import { prisma } from '@testUtil/prisma'
 import { UserQS } from '../../query-service/user/user-qs'
-import { UserDTO } from 'src/app/user/query-service-interface/user-qs'
+import {
+  UserDTO,
+  UserWithTasksStatusDTO,
+} from 'src/app/user/query-service-interface/user-qs'
 import { Page } from 'src/app/shared/Paging'
 
 describe('user-qs.integration.ts', () => {
@@ -24,7 +27,7 @@ describe('user-qs.integration.ts', () => {
     it('[正常系]userを取得できる', async () => {
       // Arrange
       const usersExpected = [
-        new UserDTO({
+        new UserWithTasksStatusDTO({
           id: 'user1',
           name: 'user1',
           mail: 'user1@example.com',
@@ -62,7 +65,7 @@ describe('user-qs.integration.ts', () => {
             },
           ],
         }),
-        new UserDTO({
+        new UserWithTasksStatusDTO({
           id: 'user2',
           name: 'user2',
           mail: 'user2@example.com',
@@ -100,7 +103,7 @@ describe('user-qs.integration.ts', () => {
             },
           ],
         }),
-        new UserDTO({
+        new UserWithTasksStatusDTO({
           id: 'user3',
           name: 'user3',
           mail: 'user3@example.com',
@@ -138,7 +141,7 @@ describe('user-qs.integration.ts', () => {
             },
           ],
         }),
-        new UserDTO({
+        new UserWithTasksStatusDTO({
           id: 'user4',
           name: 'user4',
           mail: 'user4@example.com',
@@ -176,7 +179,7 @@ describe('user-qs.integration.ts', () => {
             },
           ],
         }),
-        new UserDTO({
+        new UserWithTasksStatusDTO({
           id: 'user5',
           name: 'user5',
           mail: 'user5@example.com',
@@ -227,7 +230,7 @@ describe('user-qs.integration.ts', () => {
   describe('findById', () => {
     it('[正常系]idに合致したuserを取得できる', async () => {
       // Arrange
-      const expected = new UserDTO({
+      const expected = new UserWithTasksStatusDTO({
         id: 'user1',
         name: 'user1',
         mail: 'user1@example.com',
@@ -283,47 +286,39 @@ describe('user-qs.integration.ts', () => {
     })
   })
 
-  // describe('fetchPageByTaskAndStatus', () => {
-  //   test('正常系', async () => {
-  //     // Arrange
-  //     const expectedPage = new Page(
-  //       [
-  //         new UserDTO({
-  //           id: '1',
-  //           name: 'furukawa',
-  //           mail: 'furukawa@gmai.com',
-  //           status: 'ENROLLMENT',
-  //           tasksStatus: [],
-  //         }),
-  //         new UserDTO({
-  //           id: '2',
-  //           name: 'nakano',
-  //           mail: 'nakano@gmai.com',
-  //           status: 'ENROLLMENT',
-  //           tasksStatus: [],
-  //         }),
-  //         new UserDTO({
-  //           id: '3',
-  //           name: 'sasaki',
-  //           mail: 'sasaki@gmai.com',
-  //           status: 'ENROLLMENT',
-  //           tasksStatus: [],
-  //         }),
-  //       ],
-  //       {
-  //         totalCount: 0,
-  //         pageSize: 0,
-  //         pageNumber: 0,
-  //       },
-  //     )
+  describe('fetchPageByTaskAndStatus', () => {
+    test('[正常系] taskId=3 のタスクのステータスがDONE となっているユーザに対して、2人単位の1ページ目を取得する', async () => {
+      // Arrange
+      const expectedUserDTO = [
+        new UserDTO({
+          id: 'user3',
+          name: 'user3',
+          mail: 'user3@example.com',
+          status: 'ENROLLMENT',
+        }),
+        new UserDTO({
+          id: 'user4',
+          name: 'user4',
+          mail: 'user4@example.com',
+          status: 'RECESS',
+        }),
+      ]
+      const expectedPage = new Page(expectedUserDTO, {
+        totalCount: 3,
+        pageSize: 2,
+        pageNumber: 1,
+      })
 
-  //     // Act
-  //     const actual = await userQS.findAll()
+      // Act
+      const actual = await userQS.fetchPageByTaskAndStatus(['task3'], 'DONE', {
+        pageSize: 2,
+        pageNumber: 1,
+      })
 
-  //     // Assert
-  //     expect(actual).toEqual(expectedPage)
-  //   })
-  // })
+      // Assert
+      expect(actual).toEqual(expectedPage)
+    })
+  })
 })
 
 async function setBaseDb(): Promise<void> {
