@@ -1,10 +1,14 @@
 import { PrismaClient } from '@prisma/client'
 import { BelongingUsers } from 'src/domain/pair/belongingUsers'
 import { Pair } from 'src/domain/pair/pair'
+import { PairId } from 'src/domain/pair/pairId'
 import { PairName } from 'src/domain/pair/pairName'
 import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
+import { Team } from 'src/domain/team/team'
+import { TeamName } from 'src/domain/team/teamName'
 import { UserId } from 'src/domain/user/userId'
 import { PairRepository } from 'src/infra/db/repository/pair/pair-repository'
+import { TeamRepository } from 'src/infra/db/repository/team/team-repository'
 import { uuid as uuidv4 } from 'uuidv4'
 import { AddBelongingUserUsecase } from '../AddBelongingUserUsecase'
 
@@ -27,15 +31,44 @@ describe('AddBelongingUserUsecase', () => {
   let usecase: AddBelongingUserUsecase
   let pairRepoSaveSpy: jest.SpyInstance
   let pairRepoDeleteSpy: jest.SpyInstance
+  let teamRepoFindByPairIdSpy: jest.SpyInstance
+  let teamRepoSaveSpy: jest.SpyInstance
 
   beforeEach(() => {
     mockUuidv4.mockImplementation(() => mockUuidv4Response)
-    usecase = new AddBelongingUserUsecase(new PairRepository(prisma))
+    usecase = new AddBelongingUserUsecase(
+      new PairRepository(prisma),
+      new TeamRepository(prisma),
+    )
     pairRepoSaveSpy = jest
       .spyOn(PairRepository.prototype, 'save')
       .mockImplementation()
     pairRepoDeleteSpy = jest
       .spyOn(PairRepository.prototype, 'delete')
+      .mockImplementation()
+    teamRepoFindByPairIdSpy = jest
+      .spyOn(TeamRepository.prototype, 'findByPairId')
+      .mockResolvedValue(
+        Team.create(
+          {
+            name: TeamName.create(1),
+            belongingPairIds: [
+              PairId.create(new UniqueEntityID('pair1')),
+              PairId.create(new UniqueEntityID('pair2')),
+            ],
+            belongingUserIds: [
+              UserId.create(new UniqueEntityID('user1')),
+              UserId.create(new UniqueEntityID('user2')),
+              UserId.create(new UniqueEntityID('user3')),
+              UserId.create(new UniqueEntityID('user4')),
+              UserId.create(new UniqueEntityID('user5')),
+            ],
+          },
+          new UniqueEntityID('team1'),
+        ),
+      )
+    teamRepoSaveSpy = jest
+      .spyOn(TeamRepository.prototype, 'save')
       .mockImplementation()
   })
 

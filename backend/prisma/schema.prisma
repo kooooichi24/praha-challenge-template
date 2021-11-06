@@ -16,6 +16,7 @@ model Users {
   status            EnrollmentStatus    @default(ENROLLMENT)
   UserTask          UserTaskStatus[]
   UserBelongingPair UserBelongingPair[]
+  UserBelongingTeam UserBelongingTeam[]
 }
 
 enum EnrollmentStatus {
@@ -51,6 +52,7 @@ model Pairs {
   id                String              @id @default(uuid())
   name              String              @db.Char(1)
   UserBelongingPair UserBelongingPair[]
+  PairBelongingTeam PairBelongingTeam[]
 }
 
 model UserBelongingPair {
@@ -60,4 +62,29 @@ model UserBelongingPair {
   Pair   Pairs  @relation(fields: [pairId], references: [id], onDelete: Cascade)
 
   @@id([userId, pairId])
+}
+
+model Teams {
+  id                String              @id @default(uuid())
+  name              Int
+  PairBelongingTeam PairBelongingTeam[]
+  UserBelongingTeam UserBelongingTeam[]
+}
+
+model PairBelongingTeam {
+  pairId String
+  teamId String
+  Pair   Pairs  @relation(fields: [pairId], references: [id], onDelete: Cascade)
+  Team   Teams  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([pairId, teamId])
+}
+
+model UserBelongingTeam {
+  userId String
+  teamId String
+  User   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Team   Teams  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([userId, teamId])
 }
