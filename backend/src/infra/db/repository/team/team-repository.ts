@@ -110,11 +110,6 @@ export class TeamRepository implements ITeamRepository {
       },
     })
 
-    const task3 = this.prismaClient.pairBelongingTeam.deleteMany({
-      where: {
-        teamId: team.id.toString(),
-      },
-    })
     const datas: PairBelongingTeam[] = team.belongingPairIds.map(
       (pairId: PairId) => {
         return {
@@ -123,15 +118,10 @@ export class TeamRepository implements ITeamRepository {
         }
       },
     )
-    const task4 = this.prismaClient.pairBelongingTeam.createMany({
+    const task3 = this.prismaClient.pairBelongingTeam.createMany({
       data: datas,
     })
 
-    const task5 = this.prismaClient.userBelongingTeam.deleteMany({
-      where: {
-        teamId: team.id.toString(),
-      },
-    })
     const userBelongingTeamDatas: UserBelongingTeam[] =
       team.belongingUserIds.map((userId: UserId) => {
         return {
@@ -139,17 +129,10 @@ export class TeamRepository implements ITeamRepository {
           userId: userId.id.toString(),
         }
       })
-    const task6 = this.prismaClient.userBelongingTeam.createMany({
+    const task4 = this.prismaClient.userBelongingTeam.createMany({
       data: userBelongingTeamDatas,
     })
 
-    await this.prismaClient.$transaction([
-      task1,
-      task2,
-      task3,
-      task4,
-      task5,
-      task6,
-    ])
+    await this.prismaClient.$transaction([task1, task2, task3, task4])
   }
 }
