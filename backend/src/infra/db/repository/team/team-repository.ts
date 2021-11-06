@@ -17,10 +17,6 @@ export class TeamRepository implements ITeamRepository {
     this.prismaClient = prismaClient
   }
 
-  delete(team: Team): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
-
   async findByUserId(userId: UserId): Promise<Team | null> {
     const userBelongingPair =
       await this.prismaClient.userBelongingPair.findFirst({
@@ -183,5 +179,15 @@ export class TeamRepository implements ITeamRepository {
     })
 
     await this.prismaClient.$transaction([task1, task2, task3, task4])
+  }
+
+  async delete(team: Team): Promise<void> {
+    const task1 = this.prismaClient.teams.deleteMany({
+      where: {
+        id: team.id.toString(),
+      },
+    })
+
+    await this.prismaClient.$transaction([task1])
   }
 }
