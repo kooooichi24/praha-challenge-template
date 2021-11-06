@@ -6,6 +6,7 @@ import { Team } from 'src/domain/team/team'
 import { PairId } from 'src/domain/pair/pairId'
 import { TeamName } from 'src/domain/team/teamName'
 import { TeamRepository } from '../../repository/team/team-repository'
+import { PairBelongingTeam, Teams, UserBelongingTeam } from '.prisma/client'
 
 jest.mock('uuidv4')
 
@@ -51,7 +52,6 @@ describe('team-repository.integration.ts', () => {
         },
         new UniqueEntityID('team1'),
       )
-      console.log('expected: ', expected)
 
       // Act
       const userIdArgs = UserId.create(new UniqueEntityID('user1'))
@@ -72,65 +72,164 @@ describe('team-repository.integration.ts', () => {
     })
   })
 
-  // describe('save', () => {
-  //   test('[正常系] pairとuserBelongingPairが保存されること', async () => {
-  //     // Arrange
-  //     await prisma.users.createMany({
-  //       data: [
-  //         {
-  //           id: '100',
-  //           name: 'test100',
-  //           mail: 'test100@example.com',
-  //         },
-  //         {
-  //           id: '101',
-  //           name: 'test101',
-  //           mail: 'test101@example.com',
-  //         },
-  //       ],
-  //     })
+  describe('save', () => {
+    beforeEach(async () => {
+      await prisma.users.deleteMany({})
+      await prisma.userBelongingPair.deleteMany({})
+      await prisma.pairs.deleteMany({})
+      await prisma.pairBelongingTeam.deleteMany({})
+      await prisma.teams.deleteMany({})
+    })
+    test('[正常系] Team集約が保存されること', async () => {
+      // Arrange
+      await prisma.users.createMany({
+        data: [
+          {
+            id: 'user1',
+            name: 'user1',
+            mail: 'user1@example.com',
+            status: 'ENROLLMENT',
+          },
+          {
+            id: 'user2',
+            name: 'user2',
+            mail: 'user2@example.com',
+            status: 'ENROLLMENT',
+          },
+          {
+            id: 'user3',
+            name: 'user3',
+            mail: 'user3@example.com',
+            status: 'ENROLLMENT',
+          },
+          {
+            id: 'user4',
+            name: 'user4',
+            mail: 'user4@example.com',
+            status: 'ENROLLMENT',
+          },
+          {
+            id: 'user5',
+            name: 'user5',
+            mail: 'user5@example.com',
+            status: 'ENROLLMENT',
+          },
+        ],
+      })
+      await prisma.pairs.createMany({
+        data: [
+          {
+            id: 'pair1',
+            name: 'a',
+          },
+          {
+            id: 'pair2',
+            name: 'b',
+          },
+        ],
+      })
+      await prisma.userBelongingPair.createMany({
+        data: [
+          {
+            pairId: 'pair1',
+            userId: 'user1',
+          },
+          {
+            pairId: 'pair1',
+            userId: 'user2',
+          },
+          {
+            pairId: 'pair2',
+            userId: 'user3',
+          },
+          {
+            pairId: 'pair2',
+            userId: 'user4',
+          },
+          {
+            pairId: 'pair2',
+            userId: 'user5',
+          },
+        ],
+      })
 
-  //     const expectedPair: Pairs = {
-  //       id: '200',
-  //       name: 'a',
-  //     }
-  //     const expectedUserBelongingPair: UserBelongingPair[] = [
-  //       {
-  //         pairId: '200',
-  //         userId: '100',
-  //       },
-  //       {
-  //         pairId: '200',
-  //         userId: '101',
-  //       },
-  //     ]
+      const expectedTeam: Teams = {
+        id: 'team1',
+        name: 1,
+      }
+      const expectedPairBelongingTeams: PairBelongingTeam[] = [
+        {
+          teamId: 'team1',
+          pairId: 'pair1',
+        },
+        {
+          teamId: 'team1',
+          pairId: 'pair2',
+        },
+      ]
+      const expectedUserBelongingTeam: UserBelongingTeam[] = [
+        {
+          teamId: 'team1',
+          userId: 'user1',
+        },
+        {
+          teamId: 'team1',
+          userId: 'user2',
+        },
+        {
+          teamId: 'team1',
+          userId: 'user3',
+        },
+        {
+          teamId: 'team1',
+          userId: 'user4',
+        },
+        {
+          teamId: 'team1',
+          userId: 'user5',
+        },
+      ]
 
-  //     // Act
-  //     const pairArgs = Pair.create(
-  //       {
-  //         name: PairName.create('a'),
-  //         belongingUsers: BelongingUsers.create({
-  //           userIds: [
-  //             UserId.create(new UniqueEntityID('100')),
-  //             UserId.create(new UniqueEntityID('101')),
-  //           ],
-  //         }),
-  //       },
-  //       new UniqueEntityID('200'),
-  //     )
-  //     await pairRepository.save(pairArgs)
-  //     const actualPair = await prisma.pairs.findMany({})
-  //     const actualUserBelongingPair = await prisma.userBelongingPair.findMany(
-  //       {},
-  //     )
+      // Act
+      const teamModel = Team.create(
+        {
+          name: TeamName.create(1),
+          belongingPairIds: [
+            PairId.create(new UniqueEntityID('pair1')),
+            PairId.create(new UniqueEntityID('pair2')),
+          ],
+          belongingUserIds: [
+            UserId.create(new UniqueEntityID('user1')),
+            UserId.create(new UniqueEntityID('user2')),
+            UserId.create(new UniqueEntityID('user3')),
+            UserId.create(new UniqueEntityID('user4')),
+            UserId.create(new UniqueEntityID('user5')),
+          ],
+        },
+        new UniqueEntityID('team1'),
+      )
+      await teamRepository.save(teamModel)
+      const actualTeams = await prisma.teams.findMany({})
+      const actualPairBelongingTeams = await prisma.pairBelongingTeam.findMany({
+        where: {
+          teamId: 'team1',
+        },
+      })
+      const actualUserBelongingTeams = await prisma.userBelongingTeam.findMany({
+        where: {
+          teamId: 'team1',
+        },
+      })
 
-  //     // Assert
-  //     expect(actualPair).toHaveLength(1)
-  //     expect(actualPair[0]).toEqual(expectedPair)
-  //     expect(actualUserBelongingPair).toHaveLength(2)
-  //     expect(actualUserBelongingPair).toEqual(expectedUserBelongingPair)
-  //   })
-  // })
+      // Assert
+      expect(actualTeams).toHaveLength(1)
+      expect(actualTeams[0]).toEqual(expectedTeam)
+      expect(actualPairBelongingTeams).toHaveLength(2)
+      expect(actualPairBelongingTeams).toEqual(expectedPairBelongingTeams)
+      expect(actualUserBelongingTeams).toHaveLength(5)
+      expect(actualUserBelongingTeams).toEqual(expectedUserBelongingTeam)
+    })
+  })
 })
 
 async function setBaseDb(): Promise<void> {

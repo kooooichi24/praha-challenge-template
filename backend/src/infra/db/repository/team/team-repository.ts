@@ -1,4 +1,8 @@
-import { PrismaClient } from '@prisma/client'
+import {
+  PairBelongingTeam,
+  PrismaClient,
+  UserBelongingTeam,
+} from '@prisma/client'
 import { ITeamRepository } from 'src/app/team/repository-interface/ITeamRepository'
 import { PairId } from 'src/domain/pair/pairId'
 import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
@@ -12,8 +16,10 @@ export class TeamRepository implements ITeamRepository {
   public constructor(prismaClient: PrismaClient) {
     this.prismaClient = prismaClient
   }
-
-  save(team: Team): Promise<void> {
+  findOneMinimumTeam(): Promise<Team | null> {
+    throw new Error('Method not implemented.')
+  }
+  delete(team: Team): Promise<void> {
     throw new Error('Method not implemented.')
   }
 
@@ -75,7 +81,9 @@ export class TeamRepository implements ITeamRepository {
     let belongingUserIds: UserId[] = []
     teamData.PairBelongingTeam.forEach((pbt) => {
       pbt.Pair.UserBelongingPair.forEach((ubp) => {
-        belongingUserIds.concat(UserId.create(new UniqueEntityID(ubp.userId)))
+        belongingUserIds = belongingUserIds.concat(
+          UserId.create(new UniqueEntityID(ubp.userId)),
+        )
       })
     })
 
@@ -89,37 +97,59 @@ export class TeamRepository implements ITeamRepository {
     )
   }
 
-  // async save(pair: Pair): Promise<void> {
-  //   const task1 = this.prismaClient.pairs.deleteMany({
-  //     where: {
-  //       id: pair.id.toString(),
-  //     },
-  //   })
-  //   const task2 = this.prismaClient.userBelongingPair.deleteMany({
-  //     where: {
-  //       pairId: pair.id.toString(),
-  //     },
-  //   })
+  async save(team: Team): Promise<void> {
+    const task1 = this.prismaClient.teams.deleteMany({
+      where: {
+        id: team.id.toString(),
+      },
+    })
+    const task2 = this.prismaClient.teams.create({
+      data: {
+        id: team.id.toString(),
+        name: team.name.value,
+      },
+    })
 
-  //   const task3 = this.prismaClient.pairs.create({
-  //     data: {
-  //       id: pair.id.toString(),
-  //       name: pair.name.value,
-  //     },
-  //   })
+    const task3 = this.prismaClient.pairBelongingTeam.deleteMany({
+      where: {
+        teamId: team.id.toString(),
+      },
+    })
+    const datas: PairBelongingTeam[] = team.belongingPairIds.map(
+      (pairId: PairId) => {
+        return {
+          teamId: team.teamId.id.toString(),
+          pairId: pairId.id.toString(),
+        }
+      },
+    )
+    const task4 = this.prismaClient.pairBelongingTeam.createMany({
+      data: datas,
+    })
 
-  //   const datas: UserBelongingPair[] = pair.belongingUsers.userIds.map(
-  //     (userId: UserId) => {
-  //       return {
-  //         pairId: pair.pairId.id.toString(),
-  //         userId: userId.id.toString(),
-  //       }
-  //     },
-  //   )
-  //   const task4 = this.prismaClient.userBelongingPair.createMany({
-  //     data: datas,
-  //   })
+    const task5 = this.prismaClient.userBelongingTeam.deleteMany({
+      where: {
+        teamId: team.id.toString(),
+      },
+    })
+    const userBelongingTeamDatas: UserBelongingTeam[] =
+      team.belongingUserIds.map((userId: UserId) => {
+        return {
+          teamId: team.teamId.id.toString(),
+          userId: userId.id.toString(),
+        }
+      })
+    const task6 = this.prismaClient.userBelongingTeam.createMany({
+      data: userBelongingTeamDatas,
+    })
 
-  //   await this.prismaClient.$transaction([task1, task2, task3, task4])
-  // }
+    await this.prismaClient.$transaction([
+      task1,
+      task2,
+      task3,
+      task4,
+      task5,
+      task6,
+    ])
+  }
 }
