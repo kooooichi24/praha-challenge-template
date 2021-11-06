@@ -3,7 +3,6 @@ import { IPairRepository } from 'src/app/pair/repository-interface/IPairReposito
 import { BelongingUsers } from 'src/domain/pair/belongingUsers'
 import { Pair } from 'src/domain/pair/pair'
 import { PairName } from 'src/domain/pair/pairName'
-import { DomainEvents } from 'src/domain/shared/events/DomainEvents'
 import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
 import { UserId } from 'src/domain/user/userId'
 

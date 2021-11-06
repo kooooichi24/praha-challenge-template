@@ -4,6 +4,7 @@ import { PairName } from 'src/domain/pair/pairName'
 import { UserId } from 'src/domain/user/userId'
 import { createRandomAlphabetChar } from 'src/util/random'
 import { UseCase } from '../shared/UseCase'
+import { ITeamRepository } from '../team/repository-interface/ITeamRepository'
 import { IPairRepository } from './repository-interface/IPairRepository'
 
 interface Request {
@@ -13,11 +14,10 @@ interface Request {
 export class AddBelongingUserUsecase
   implements UseCase<Request, Promise<void>>
 {
-  private readonly pairRepo: IPairRepository
-
-  constructor(pairRepo: IPairRepository) {
-    this.pairRepo = pairRepo
-  }
+  constructor(
+    private pairRepo: IPairRepository,
+    private teamRepo: ITeamRepository,
+  ) {}
 
   public async do(req: Request): Promise<void> {
     console.log('called AddBelongingUserUsecase.do()')
@@ -34,6 +34,14 @@ export class AddBelongingUserUsecase
 
     pair.addUser(req.userId)
     await this.pairRepo.save(pair)
+
+    // pairが所属しているteamにも追加する
+    const team = await this.teamRepo.findByPairId(pair.pairId)
+    if (!team) {
+      throw Error('チームが取得できない場合は、pairの更新もロールバックしたい')
+    }
+    team.addUser(req.userId)
+    await this.teamRepo.save(team)
   }
 
   private async splitPair(pair: Pair, targetUserId: UserId): Promise<void> {
