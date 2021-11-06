@@ -8,7 +8,7 @@ import { GetAllTeamsResponse } from './response/get-all-teams-response'
 @Controller({
   path: '/api/pairs',
 })
-export class PairController {
+export class TeamController {
   // memo: @ApiResponseを定義しておかないとSwaggerに出力されない
   @Get()
   @HttpCode(200)
