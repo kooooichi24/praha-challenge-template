@@ -72,6 +72,109 @@ describe('team-repository.integration.ts', () => {
     })
   })
 
+  describe('findOneMinimumPair', () => {
+    test('[正常系] 最も参加人数が少ないチームを1つ取得できること', async () => {
+      // Arrange
+      await prisma.users.createMany({
+        data: [
+          {
+            id: 'user6',
+            name: 'user6',
+            mail: 'user6@example.com',
+            status: 'ENROLLMENT',
+          },
+          {
+            id: 'user7',
+            name: 'user7',
+            mail: 'user7@example.com',
+            status: 'ENROLLMENT',
+          },
+          {
+            id: 'user8',
+            name: 'user8',
+            mail: 'user8@example.com',
+            status: 'ENROLLMENT',
+          },
+        ],
+      })
+      await prisma.pairs.createMany({
+        data: [
+          {
+            id: 'pair3',
+            name: 'c',
+          },
+        ],
+      })
+      await prisma.userBelongingPair.createMany({
+        data: [
+          {
+            pairId: 'pair3',
+            userId: 'user6',
+          },
+          {
+            pairId: 'pair3',
+            userId: 'user7',
+          },
+          {
+            pairId: 'pair3',
+            userId: 'user8',
+          },
+        ],
+      })
+      await prisma.teams.createMany({
+        data: [
+          {
+            id: 'team2',
+            name: 2,
+          },
+        ],
+      })
+      await prisma.pairBelongingTeam.createMany({
+        data: [
+          {
+            teamId: 'team2',
+            pairId: 'pair3',
+          },
+        ],
+      })
+      await prisma.userBelongingTeam.createMany({
+        data: [
+          {
+            teamId: 'team2',
+            userId: 'user6',
+          },
+          {
+            teamId: 'team2',
+            userId: 'user7',
+          },
+          {
+            teamId: 'team2',
+            userId: 'user8',
+          },
+        ],
+      })
+
+      const expected = Team.create(
+        {
+          name: TeamName.create(2),
+          belongingPairIds: [PairId.create(new UniqueEntityID('pair3'))],
+          belongingUserIds: [
+            UserId.create(new UniqueEntityID('user6')),
+            UserId.create(new UniqueEntityID('user7')),
+            UserId.create(new UniqueEntityID('user8')),
+          ],
+        },
+        new UniqueEntityID('team2'),
+      )
+
+      // Act
+      const actual = await teamRepository.findOneMinimumTeam()
+
+      // Assert
+      expect(actual).toEqual(expected)
+    })
+  })
+
   describe('save', () => {
     beforeEach(async () => {
       await prisma.users.deleteMany({})
@@ -320,6 +423,30 @@ async function setBaseDb(): Promise<void> {
       {
         teamId: 'team1',
         pairId: 'pair2',
+      },
+    ],
+  })
+  await prisma.userBelongingTeam.createMany({
+    data: [
+      {
+        teamId: 'team1',
+        userId: 'user1',
+      },
+      {
+        teamId: 'team1',
+        userId: 'user2',
+      },
+      {
+        teamId: 'team1',
+        userId: 'user3',
+      },
+      {
+        teamId: 'team1',
+        userId: 'user4',
+      },
+      {
+        teamId: 'team1',
+        userId: 'user5',
       },
     ],
   })

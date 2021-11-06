@@ -16,9 +16,7 @@ export class TeamRepository implements ITeamRepository {
   public constructor(prismaClient: PrismaClient) {
     this.prismaClient = prismaClient
   }
-  findOneMinimumTeam(): Promise<Team | null> {
-    throw new Error('Method not implemented.')
-  }
+
   delete(team: Team): Promise<void> {
     throw new Error('Method not implemented.')
   }
@@ -94,6 +92,57 @@ export class TeamRepository implements ITeamRepository {
         belongingUserIds,
       },
       new UniqueEntityID(teamData.id),
+    )
+  }
+
+  async findOneMinimumTeam(): Promise<Team | null> {
+    const teamId = await this.prismaClient.userBelongingTeam.groupBy({
+      by: ['teamId'],
+      _count: {
+        teamId: true,
+      },
+      orderBy: {
+        _count: {
+          teamId: 'asc',
+        },
+      },
+      take: 1,
+    })
+
+    if (!teamId || teamId.length === 0) {
+      return null
+    }
+
+    const team = await this.prismaClient.teams.findUnique({
+      where: {
+        id: teamId[0]?.teamId,
+      },
+      include: {
+        UserBelongingTeam: true,
+        PairBelongingTeam: true,
+      },
+    })
+    if (!team) {
+      return null
+    }
+
+    const belongingUserIds = team.UserBelongingTeam.map(
+      (ubt: UserBelongingTeam) => {
+        return UserId.create(new UniqueEntityID(ubt.userId))
+      },
+    )
+    const belongingPairIds = team.PairBelongingTeam.map(
+      (pbt: PairBelongingTeam) => {
+        return PairId.create(new UniqueEntityID(pbt.pairId))
+      },
+    )
+    return Team.create(
+      {
+        name: TeamName.create(team.name),
+        belongingUserIds,
+        belongingPairIds,
+      },
+      new UniqueEntityID(team.id),
     )
   }
 
