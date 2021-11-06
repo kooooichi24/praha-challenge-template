@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { UserDTO } from 'src/app/user/query-service-interface/user-qs'
 import { UserTaskStatus } from 'src/domain/user-task-status/entity/user-task-status'
 import { UserService } from 'src/domain/user/service/user-service'
 import { TaskStatusRepository } from 'src/infra/db/repository/task-status/task-status-repository'

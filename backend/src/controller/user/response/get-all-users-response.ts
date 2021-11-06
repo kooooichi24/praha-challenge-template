@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { UserTaskStatus } from '@prisma/client'
-import { UserDTO } from 'src/app/user/query-service-interface/user-qs'
+import { UserWithTasksStatusDTO } from 'src/app/user/query-service-interface/user-qs'
 
 export class GetAllUsersResponse {
   @ApiProperty({ type: () => [User] })
   users: User[]
 
-  public constructor(params: { users: UserDTO[] }) {
+  public constructor(params: { users: UserWithTasksStatusDTO[] }) {
     const { users } = params
     this.users = users.map(({ id, name, mail, status, tasksStatus }) => {
       return new User({

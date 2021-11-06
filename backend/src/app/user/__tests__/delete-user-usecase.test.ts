@@ -4,7 +4,7 @@ import { UserQS } from 'src/infra/db/query-service/user/user-qs'
 import { DeleteUserUseCase } from '../delete-user-usecase'
 import { User } from 'src/domain/user/user'
 import { createRandomIdString } from 'src/util/random'
-import { UserDTO } from '../query-service-interface/user-qs'
+import { UserWithTasksStatusDTO } from '../query-service-interface/user-qs'
 import { uuid as uuidv4 } from 'uuidv4'
 
 jest.mock('uuidv4')
@@ -33,7 +33,7 @@ describe('do', () => {
   test('[正常系] 例外が発生しない', async () => {
     // Arrange
     const deletedUserId = createRandomIdString()
-    const findByIdResponse = new UserDTO({
+    const findByIdResponse = new UserWithTasksStatusDTO({
       id: deletedUserId,
       mail: 'mail@gmail.com',
       name: 'name',

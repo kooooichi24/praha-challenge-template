@@ -1,5 +1,5 @@
 import { Page } from '../shared/Paging'
-import { UserDTO, IUserQS } from './query-service-interface/user-qs'
+import { IUserQS, UserDTO } from './query-service-interface/user-qs'
 
 export class FetchPagingUsersUseCase {
   public constructor(private userQS: IUserQS) {}
