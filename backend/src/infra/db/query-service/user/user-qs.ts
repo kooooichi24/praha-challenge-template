@@ -1,4 +1,5 @@
-import { PrismaClient, Users } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
+import { PagingCondition, Page } from 'src/app/shared/Paging'
 import { UserDTO, IUserQS } from 'src/app/user/query-service-interface/user-qs'
 
 export class UserQS implements IUserQS {
@@ -49,5 +50,13 @@ export class UserQS implements IUserQS {
       status: userData.status,
       tasksStatus: userData.UserTask,
     })
+  }
+
+  fetchPageByTaskAndStatus(
+    taskIds: string[],
+    taskStatus: 'TODO' | 'REVIEWING' | 'DONE',
+    pagingCondition: PagingCondition,
+  ): Promise<Page<UserDTO>> {
+    throw new Error('Method not implemented.')
   }
 }

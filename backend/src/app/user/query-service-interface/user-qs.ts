@@ -1,4 +1,5 @@
 import { UserTaskStatus } from '@prisma/client'
+import { Page, PagingCondition } from 'src/app/shared/Paging'
 
 export class UserDTO {
   public readonly id: string
@@ -25,4 +26,9 @@ export class UserDTO {
 export interface IUserQS {
   findAll(): Promise<UserDTO[]>
   findById(id: string): Promise<UserDTO | undefined>
+  fetchPageByTaskAndStatus(
+    taskIds: string[],
+    taskStatus: 'TODO' | 'REVIEWING' | 'DONE',
+    pagingCondition: PagingCondition,
+  ): Promise<Page<UserDTO>>
 }
