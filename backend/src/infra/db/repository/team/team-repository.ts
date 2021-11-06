@@ -91,6 +91,44 @@ export class TeamRepository implements ITeamRepository {
     )
   }
 
+  async findByPairId(pairId: PairId): Promise<Team | null> {
+    const team = await this.prismaClient.teams.findFirst({
+      where: {
+        PairBelongingTeam: {
+          some: {
+            pairId: pairId.id.toString(),
+          },
+        },
+      },
+      include: {
+        PairBelongingTeam: true,
+        UserBelongingTeam: true,
+      },
+    })
+    if (!team) {
+      return null
+    }
+
+    const belongingUserIds = team.UserBelongingTeam.map(
+      (ubt: UserBelongingTeam) => {
+        return UserId.create(new UniqueEntityID(ubt.userId))
+      },
+    )
+    const belongingPairIds = team.PairBelongingTeam.map(
+      (pbt: PairBelongingTeam) => {
+        return PairId.create(new UniqueEntityID(pbt.pairId))
+      },
+    )
+    return Team.create(
+      {
+        name: TeamName.create(team.name),
+        belongingUserIds,
+        belongingPairIds,
+      },
+      new UniqueEntityID(team.id),
+    )
+  }
+
   async findOneMinimumTeam(): Promise<Team | null> {
     const teamId = await this.prismaClient.userBelongingTeam.groupBy({
       by: ['teamId'],

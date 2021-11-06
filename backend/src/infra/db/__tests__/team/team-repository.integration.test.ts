@@ -72,6 +72,37 @@ describe('team-repository.integration.ts', () => {
     })
   })
 
+  describe('findByPairId', () => {
+    test('[正常系] ペアが所属しているチームを取得できること', async () => {
+      // Arrange
+      const expected = Team.create(
+        {
+          name: TeamName.create(1),
+          belongingPairIds: [
+            PairId.create(new UniqueEntityID('pair1')),
+            PairId.create(new UniqueEntityID('pair2')),
+          ],
+          belongingUserIds: [
+            UserId.create(new UniqueEntityID('user1')),
+            UserId.create(new UniqueEntityID('user2')),
+            UserId.create(new UniqueEntityID('user3')),
+            UserId.create(new UniqueEntityID('user4')),
+            UserId.create(new UniqueEntityID('user5')),
+          ],
+        },
+        new UniqueEntityID('team1'),
+      )
+
+      // Act
+      const actual = await teamRepository.findByPairId(
+        PairId.create(new UniqueEntityID('pair1')),
+      )
+
+      // Assert
+      expect(actual).toStrictEqual(expected)
+    })
+  })
+
   describe('findOneMinimumPair', () => {
     test('[正常系] 最も参加人数が少ないチームを1つ取得できること', async () => {
       // Arrange
