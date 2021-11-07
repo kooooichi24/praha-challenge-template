@@ -3,7 +3,7 @@ import { UserRepository } from 'src/infra/db/repository/user/user-repository'
 import { User } from 'src/domain/user/user'
 import { UpdateUserStateUseCase } from '../update-user-state-usecase'
 import { UserQS } from 'src/infra/db/query-service/user/user-qs'
-import { UserDTO } from '../query-service-interface/user-qs'
+import { UserWithTasksStatusDTO } from '../query-service-interface/user-qs'
 import { UniqueEntityID } from 'src/domain/shared/UniqueEntityID'
 
 describe('do', () => {
@@ -15,7 +15,7 @@ describe('do', () => {
 
   test('[正常系]: 例外が発生しない', async () => {
     // Arrange
-    const mockResponseUserDTO = new UserDTO({
+    const mockResponseUserDTO = new UserWithTasksStatusDTO({
       id: '123',
       mail: 'mail@gmail.com',
       name: 'name',

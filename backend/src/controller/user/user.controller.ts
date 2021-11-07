@@ -24,6 +24,9 @@ import { UpdateUserResponse } from './response/update-user-response'
 import { UpdateUserStateUseCase } from 'src/app/user/update-user-state-usecase'
 import { TaskRepository } from 'src/infra/db/repository/task/task-repository'
 import { TaskStatusRepository } from 'src/infra/db/repository/task-status/task-status-repository'
+import { TaskFilteringAndPaginationRouteParameters } from './route-parameters/task-filtering-and-pagination-route-parameters'
+import { PagingUsersResponse } from './response/paging-users-response'
+import { FetchPagingUsersUseCase } from 'src/app/user/fetch-paging-users-usecase'
 
 @Controller({
   path: '/user',
@@ -83,6 +86,28 @@ export class UserController {
       ...result.getAllProperties(),
       id: result.id.toString(),
     })
+    return response
+  }
+
+  @Get('/tasks')
+  @HttpCode(200)
+  async paging(
+    @Param() params: TaskFilteringAndPaginationRouteParameters,
+  ): Promise<PagingUsersResponse> {
+    const prisma = new PrismaClient()
+    const qs = new UserQS(prisma)
+    const usecase = new FetchPagingUsersUseCase(qs)
+
+    const taskIds = params.ids.split(',')
+    const taskStatus = params.status as 'TODO' | 'REVIEWING' | 'DONE'
+
+    const result = await usecase.do(
+      taskIds,
+      taskStatus,
+      Number(params.per_page),
+      Number(params.page),
+    )
+    const response = new PagingUsersResponse(result)
     return response
   }
 }

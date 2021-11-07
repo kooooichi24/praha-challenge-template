@@ -3,7 +3,7 @@ import { UserQS } from 'src/infra/db/query-service/user/user-qs'
 import { GetAllUsersUseCase } from '../get-all-users-usecase'
 import { mocked } from 'ts-jest/utils'
 import { MockedObjectDeep } from 'ts-jest/dist/utils/testing'
-import { UserDTO } from '../query-service-interface/user-qs'
+import { UserWithTasksStatusDTO } from '../query-service-interface/user-qs'
 
 jest.mock('@prisma/client')
 jest.mock('src/infra/db/query-service/user/user-qs')
@@ -18,7 +18,7 @@ describe('do', () => {
 
   test('[正常系]: UserDTO[]を取得できること', async () => {
     // Arrange
-    const mockResponseUserDTO: UserDTO[] = [
+    const mockResponseUserDTO: UserWithTasksStatusDTO[] = [
       {
         id: '1',
         name: 'furukawa',

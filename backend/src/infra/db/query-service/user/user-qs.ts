@@ -1,5 +1,10 @@
-import { PrismaClient, Users } from '@prisma/client'
-import { UserDTO, IUserQS } from 'src/app/user/query-service-interface/user-qs'
+import { PrismaClient } from '@prisma/client'
+import { PagingCondition, Page } from 'src/app/shared/Paging'
+import {
+  UserWithTasksStatusDTO,
+  IUserQS,
+  UserDTO,
+} from 'src/app/user/query-service-interface/user-qs'
 
 export class UserQS implements IUserQS {
   private prismaClient: PrismaClient
@@ -7,7 +12,7 @@ export class UserQS implements IUserQS {
     this.prismaClient = prismaClient
   }
 
-  public async findAll(): Promise<UserDTO[]> {
+  public async findAll(): Promise<UserWithTasksStatusDTO[]> {
     const allUsersDatas = await this.prismaClient.users.findMany({
       include: {
         UserTask: true,
@@ -19,7 +24,7 @@ export class UserQS implements IUserQS {
 
     return allUsersDatas.map(
       (userDM) =>
-        new UserDTO({
+        new UserWithTasksStatusDTO({
           id: userDM.id,
           name: userDM.name,
           mail: userDM.mail,
@@ -29,7 +34,9 @@ export class UserQS implements IUserQS {
     )
   }
 
-  public async findById(id: string): Promise<UserDTO | undefined> {
+  public async findById(
+    id: string,
+  ): Promise<UserWithTasksStatusDTO | undefined> {
     const userData = await this.prismaClient.users.findUnique({
       include: {
         UserTask: true,
@@ -42,12 +49,53 @@ export class UserQS implements IUserQS {
       return undefined
     }
 
-    return new UserDTO({
+    return new UserWithTasksStatusDTO({
       id: userData.id,
       name: userData.name,
       mail: userData.mail,
       status: userData.status,
       tasksStatus: userData.UserTask,
+    })
+  }
+
+  async fetchPageByTaskAndStatus(
+    taskIds: string[],
+    taskStatus: 'TODO' | 'REVIEWING' | 'DONE',
+    pagingCondition: PagingCondition,
+  ): Promise<Page<UserDTO>> {
+    const userDatas = await this.prismaClient.userTaskStatus.findMany({
+      where: {
+        taskId: { in: taskIds },
+        status: taskStatus,
+      },
+      select: {
+        User: true,
+      },
+      orderBy: {
+        userId: 'asc',
+      },
+      skip: pagingCondition.pageSize * (pagingCondition.pageNumber - 1),
+      take: pagingCondition.pageSize,
+    })
+    const count = await this.prismaClient.userTaskStatus.count({
+      where: {
+        taskId: { in: taskIds },
+        status: taskStatus,
+      },
+    })
+
+    const userDTOs = userDatas.map((userData) => {
+      return new UserDTO({
+        id: userData.User.id,
+        name: userData.User.name,
+        mail: userData.User.mail,
+        status: userData.User.status,
+      })
+    })
+    return new Page(userDTOs, {
+      totalCount: count,
+      pageSize: pagingCondition.pageSize,
+      pageNumber: pagingCondition.pageNumber,
     })
   }
 }
