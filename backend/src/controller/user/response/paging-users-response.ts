@@ -2,27 +2,6 @@ import { ApiProperty } from '@nestjs/swagger'
 import { Page } from 'src/app/shared/Paging'
 import { UserDTO } from 'src/app/user/query-service-interface/user-qs'
 
-export class PagingUsersResponse {
-  @ApiProperty({ type: () => [User] })
-  users: User[]
-
-  @ApiProperty({ type: () => Paging })
-  paging: Paging
-
-  public constructor(params: Page<UserDTO>) {
-    const { items, paging } = params
-    this.users = items.map(({ id, name, mail, status }) => {
-      return new User({
-        id,
-        name,
-        mail,
-        status,
-      })
-    })
-    this.paging = paging
-  }
-}
-
 class Paging {
   @ApiProperty()
   totalCount: number
@@ -67,5 +46,26 @@ class User {
     this.name = params.name
     this.mail = params.mail
     this.status = params.status
+  }
+}
+
+export class PagingUsersResponse {
+  @ApiProperty({ type: () => [User] })
+  users: User[]
+
+  @ApiProperty({ type: () => Paging })
+  paging: Paging
+
+  public constructor(params: Page<UserDTO>) {
+    const { items, paging } = params
+    this.users = items.map(({ id, name, mail, status }) => {
+      return new User({
+        id,
+        name,
+        mail,
+        status,
+      })
+    })
+    this.paging = paging
   }
 }

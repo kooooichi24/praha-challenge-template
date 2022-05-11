@@ -10,7 +10,7 @@ export class GetAllTeamsResponse {
     this.teams = teams.map(({ id, name, belongingPairs }) => {
       return new Team({
         id,
-        name,
+        name: name.toString(),
         belongingPairs,
       })
     })
